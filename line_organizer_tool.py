@@ -29,7 +29,7 @@ def check_paths():
     # PROMPT USER TO CHOOSE PROJECT
     chosen_project = choose_project()
 
-    # Intra-project paths
+    #region # Intra-project paths
     # Project specific folder
     # lines folder
     # csv file
@@ -60,6 +60,7 @@ def check_paths():
     if not os.path.exists(META_FILE_PATH):
         with open(META_FILE_PATH, 'w'):
             pass
+    #endregion
 
 
 def choose_project():
@@ -73,7 +74,20 @@ def choose_project():
     print('Opening {}.'.format(chosen_project))
     return chosen_project
 
-    
+
+def surf_lines():
+    # Go through the lines in the index
+    global PROJECT_PATH
+    global LINES_FOLDER_PATH
+    global META_FILE_PATH
+
+    pass
+# What info will be requested to index each line.
+# In the sublists, default values for each criteria, if they are a closed set.
+INDEXING_CRITERIA = ['CHARACTER',
+                     'MISSION_NUMBER',
+                     ['ACE_STYLE', 'MERCENARY', 'SOLDIER', 'KNIGHT'],
+                     'PHRASE']
 
 
 if __name__ == "__main__":
