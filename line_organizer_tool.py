@@ -57,10 +57,6 @@ def check_paths():
         with open(PROJECT_FLAG_FILE_PATH, 'w'):
             # File can be empty. Maybe I could add stuff here later...
             pass
-
-    if not os.path.exists(META_FILE_PATH):
-        with open(META_FILE_PATH, 'w'):
-            pass
     #endregion
 
 
