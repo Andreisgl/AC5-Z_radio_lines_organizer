@@ -87,32 +87,58 @@ def surf_lines():
                         ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT']],
                         'TEXT']
 
+    file_header = []
+    # How many of the first rows shouldn't be editable
+    constant_columns = 2
     # Init .csv file
     if not os.path.exists(LINE_INFO_FILE_PATH): # If csv does not exist
-        with open(LINE_INFO_FILE_PATH,
-                  mode='w',
+        with open(LINE_INFO_FILE_PATH, mode='w',
                   encoding='UTF8',
                   newline='') as line_file: # Create file
             # Define delimiters
             line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
-            # Write header with criteria as columns
-            header = []
+            # Write file_header with criteria as columns
             for criteria in INDEXING_CRITERIA:
                 if type(criteria) == str:
-                    header.append(criteria)
+                    file_header.append(criteria)
                 else:
-                    header.append(criteria[0])
-            header.insert(0, 'ID') # Insert ID column. It autoincrements.
-            header.insert(1, 'FILENAME') # Insert FILENAME column.
-            # Write header
-            line_writer.writerow(header)
+                    file_header.append(criteria[0])
+            # Constant columns. "constant_columns" = 2, since there are 2
+            file_header.insert(0, 'ID') # Insert ID column. It autoincrements.
+            file_header.insert(1, 'FILENAME') # Insert FILENAME column.
+            # Write file_header
+            line_writer.writerow(file_header)
 
             # Write all files
             for index, track in enumerate(track_list):
                 row = [index, track]
+                # Write empty data to criteria to have
+                # all columns appear as items in the list when reading later.
+                padding = ['' for x in INDEXING_CRITERIA]
+                row += padding
                 line_writer.writerow(row)
+            pass
 
-    
+    line_file_dump = []
+    line_pure_info = []
+    with open(LINE_INFO_FILE_PATH, mode='r',
+                encoding='UTF8',
+                newline='') as line_file: # Open file
+        csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
+        line_file_dump = [x for x in csv_reader]
+
+        # Write/Rewrite header
+        file_header = line_file_dump[0]
+        # "tracks_pure_info" will be the main list referenced when indexing
+        tracks_pure_info = [x[constant_columns:] for x in line_file_dump[1:]]
+
+        # From here, pass "tracks_pure_info" as a parameter
+        # to an indexing prompt function,
+        # which will return an updated list.
+        # The current function will take it and save it to the .csv file.
+        pass
+
+
 
     pass
 
