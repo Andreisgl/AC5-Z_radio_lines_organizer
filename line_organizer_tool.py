@@ -37,7 +37,7 @@ def check_paths():
     global PROJECT_NAME
     global PROJECT_PATH
     global LINES_FOLDER_PATH
-    global META_FILE_PATH
+    global LINE_INFO_FILE_PATH
     # The existence of this file indicates a dir is a project
     global PROJECT_FLAG_FILE_PATH 
     
@@ -45,7 +45,7 @@ def check_paths():
     PROJECT_PATH = os.path.join(PROJECTS_DB_PATH, PROJECT_NAME)
     PROJECT_FLAG_FILE_PATH = os.path.join(PROJECT_PATH, 'project.ACL')
     LINES_FOLDER_PATH = os.path.join(PROJECT_PATH, 'lines')
-    META_FILE_PATH = os.path.join(PROJECT_PATH, 'line_data.csv')
+    LINE_INFO_FILE_PATH = os.path.join(PROJECT_PATH, 'line_data.csv')
 
     if not os.path.exists(PROJECT_PATH):
         os.mkdir(PROJECT_PATH)
@@ -76,11 +76,11 @@ def surf_lines():
     # Go through the lines in the index
     global PROJECT_PATH
     global LINES_FOLDER_PATH
-    global META_FILE_PATH
+    global LINE_INFO_FILE_PATH
 
     files = os.listdir(LINES_FOLDER_PATH)
 
-    # Save lines
+    # Handle
     
 
     pass
