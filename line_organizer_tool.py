@@ -8,6 +8,7 @@ import csv
 
 def main():
     check_paths()
+    surf_lines()
 
 def check_paths():
     # Make sure important paths and dirs are created
@@ -80,6 +81,11 @@ def surf_lines():
     global PROJECT_PATH
     global LINES_FOLDER_PATH
     global META_FILE_PATH
+
+    files = os.listdir(LINES_FOLDER_PATH)
+
+    # Save lines
+    
 
     pass
 # What info will be requested to index each line.
