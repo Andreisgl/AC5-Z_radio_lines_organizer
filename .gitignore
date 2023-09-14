@@ -1,5 +1,6 @@
-# Script-specific folders:
+# Project-specific ignores:
 PROJECTS
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

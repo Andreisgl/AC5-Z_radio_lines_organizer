@@ -78,18 +78,44 @@ def surf_lines():
     global LINES_FOLDER_PATH
     global LINE_INFO_FILE_PATH
 
-    files = os.listdir(LINES_FOLDER_PATH)
+    track_list = os.listdir(LINES_FOLDER_PATH)
 
-    # Handle
+    # What info will be requested to index each line.
+    # In the sublists, default values for each criteria, if they are a closed set.
+    INDEXING_CRITERIA = ['CHARACTER',
+                        'MISSION_NUMBER',
+                        ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT']],
+                        'TEXT']
+
+    # Init .csv file
+    if not os.path.exists(LINE_INFO_FILE_PATH): # If csv does not exist
+        with open(LINE_INFO_FILE_PATH,
+                  mode='w',
+                  encoding='UTF8',
+                  newline='') as line_file: # Create file
+            # Define delimiters
+            line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
+            # Write header with criteria as columns
+            header = []
+            for criteria in INDEXING_CRITERIA:
+                if type(criteria) == str:
+                    header.append(criteria)
+                else:
+                    header.append(criteria[0])
+            header.insert(0, 'ID') # Insert ID column. It autoincrements.
+            header.insert(1, 'FILENAME') # Insert FILENAME column.
+            # Write header
+            line_writer.writerow(header)
+
+            # Write all files
+            for index, track in enumerate(track_list):
+                row = [index, track]
+                line_writer.writerow(row)
+
     
 
     pass
-# What info will be requested to index each line.
-# In the sublists, default values for each criteria, if they are a closed set.
-INDEXING_CRITERIA = ['CHARACTER',
-                     'MISSION_NUMBER',
-                     ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT']],
-                     'PHRASE']
+
 
 
 if __name__ == "__main__":
