@@ -88,7 +88,7 @@ def surf_lines():
 # In the sublists, default values for each criteria, if they are a closed set.
 INDEXING_CRITERIA = ['CHARACTER',
                      'MISSION_NUMBER',
-                     ['ACE_STYLE', 'MERCENARY', 'SOLDIER', 'KNIGHT'],
+                     ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT']],
                      'PHRASE']
 
 
