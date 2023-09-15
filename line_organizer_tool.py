@@ -8,7 +8,7 @@ import csv
 
 def main():
     check_paths()
-    surf_lines()
+    handle__tracks_info_file()
 
 def check_paths():
     # Make sure important paths and dirs are created
@@ -72,7 +72,7 @@ def choose_project():
     return chosen_project
 
 
-def surf_lines():
+def handle__tracks_info_file():
     # Go through the lines in the index
     global PROJECT_PATH
     global LINES_FOLDER_PATH
@@ -92,9 +92,7 @@ def surf_lines():
     constant_columns = 2
     # Init .csv file
     if not os.path.exists(LINE_INFO_FILE_PATH): # If csv does not exist
-        with open(LINE_INFO_FILE_PATH, mode='w',
-                  encoding='UTF8',
-                  newline='') as line_file: # Create file
+        with open(LINE_INFO_FILE_PATH, mode='w', encoding='UTF8', newline='') as line_file: # Create file
             # Define delimiters
             line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
             # Write file_header with criteria as columns
@@ -121,27 +119,28 @@ def surf_lines():
 
     line_file_dump = []
     line_pure_info = []
-    with open(LINE_INFO_FILE_PATH, mode='r',
-                encoding='UTF8',
-                newline='') as line_file: # Open file
+    with open(LINE_INFO_FILE_PATH, mode='r', encoding='UTF8', newline='') as line_file: # Open file
         csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
         line_file_dump = [x for x in csv_reader]
 
         # Write/Rewrite header
         file_header = line_file_dump[0]
         # "tracks_pure_info" will be the main list referenced when indexing
-        tracks_pure_info = [x[constant_columns:] for x in line_file_dump[1:]]
+        line_pure_info = [x for x in line_file_dump[1:]] # Cut off only ID
 
-        # From here, pass "tracks_pure_info" as a parameter
-        # to an indexing prompt function,
-        # which will return an updated list.
-        # The current function will take it and save it to the .csv file.
-        pass
-
+    
+    # From here, pass "line_pure_info" as a parameter
+    # to an indexing prompt function,
+    # which will return an updated list.
+    # The current function will take it and save it to the .csv file.
+    aux = surf_lines(line_pure_info)
 
 
     pass
 
+def surf_lines(line_info):
+
+    pass
 
 
 if __name__ == "__main__":
