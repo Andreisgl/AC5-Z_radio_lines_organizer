@@ -108,8 +108,8 @@ def handle__tracks_info_file():
             line_writer.writerow(file_header)
 
             # Write all files
-            for index, track in enumerate(track_list):
-                row = [index, track]
+            for field_index, track in enumerate(track_list):
+                row = [field_index, track]
                 # Write empty data to criteria to have
                 # all columns appear as items in the list when reading later.
                 padding = ['' for x in INDEXING_CRITERIA]
@@ -133,8 +133,17 @@ def handle__tracks_info_file():
     # to an indexing prompt function,
     # which will return an updated list.
     # The current function will take it and save it to the .csv file.
-    aux = surf_lines(line_file_dump, True)
+    edited_file_data = surf_lines(line_file_dump, True)
 
+    os.remove(LINE_INFO_FILE_PATH) # Remove old file
+
+    # Rewrite file
+    with open(LINE_INFO_FILE_PATH, mode='w', encoding='UTF8', newline='') as line_file: # Create file
+        # Define delimiters
+        line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
+        
+        for row in edited_file_data:
+            line_writer.writerow(row)
 
     pass
 
@@ -152,65 +161,82 @@ def surf_lines(line_info, ignore_unknowns):
     
     # Types of special data that can be input in a field
     entry_dummy = dummy_data # Same as before
-    entry_terminate = '' # Char that terminates a prompt when entered
+    entry_terminate = '\\' # Char that terminates a prompt when entered
 
+    num_static_columns = 2 # Ammount of static columns (ID, file name)
+
+    #SAMPLING
+    # Sample part of full dataset for testing
+    #line_info = line_info[:20]
+
+
+    # Split data into parts
     header = line_info[0] # Get header
     line_info = line_info[1:] # Remove header from list.
     data_set = line_info # Pass info to 'data_set'.
-
-    # Sample part of full dataset for testing
-    data_set = data_set[:20]
+    static_columns = data_set
 
     # Remove ID and track name from editable data
-    data_set = [x[2:] for x in data_set]
+    data_set = [x[num_static_columns:] for x in data_set]
+    # Reference header with only columns names for editable data
+    editable_header = [x for x in header[num_static_columns:]]
+    # Remove editable data from the 'static_columns'
+    static_columns = [x[:num_static_columns] for x in static_columns]
 
-    print('Full set:\n{}'.format(line_info))
+
+    #print('Full set:\n{}'.format(line_info))
     quit = False
-    for line in data_set:
+    for line_index, line in enumerate(data_set):
         if quit: # If user chose to quit in previous line
             break
-        print(line)
-        for index, field in enumerate(line):
+        print(static_columns[line_index][1]) # Print file name
+        for field_index, field in enumerate(line):
+            current_field = editable_header[field_index]
+            print(current_field)
             # Decide whatto do based on data
             if dummy_data in line: # Mark whole line and skip.
-                line = [dummy_data for x in line]
-                print(field + ' is dummy!')
+                data_set[line_index] = [dummy_data for x in line]
+                print('is dummy!')
                 break
             elif field == unknown_data: # Determine what to do
                 if ignore_unknowns:
-                    print(field + ' is unk!')
+                    print('is unk!')
                     print('skip')
                     continue # Skip field
                 else:
-                    print(field + ' is unk!')
+                    print('is unk!')
                     print('prompt')
                     pass # Go ahead to prompt
             elif field == empty_data: # Must be filled up
-                print(field + ' is empty!')
+                print('is empty!')
                 print('prompt')
                 pass # Go ahead to prompt
             else: # Is user-input data. Skip.
-                print(field + ' is already filled out!')
+                print('is already filled out!')
                 print('skip')
                 continue # Skip field
         
             # Data entry
-            answer = input('Enter your data for {}'.format(field))
+            answer = input('Enter your data for {}: '.format(current_field))
             if answer == entry_terminate:
                 # Quit prompt
                 quit = True
                 break
             elif answer == entry_dummy:
                 # Mark whole line as dummy and skip
-                line = [dummy_data for x in line]
+                data_set[line_index] = [dummy_data for x in line]
                 break
             else: # Pass answer to field
-                field = answer
+                data_set[line_index][field_index] = answer
                 pass
-
-    return # Do output stuff later
-        
-    pass
+    
+    # Reassemble file for outputting
+    output_data = []
+    for index, entry in enumerate(data_set):
+        output_data.append(static_columns[index] + data_set[index])
+    output_data.insert(0, header) # Insert header back
+    
+    return output_data
 
 
 if __name__ == "__main__":
