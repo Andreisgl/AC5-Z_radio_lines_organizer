@@ -71,6 +71,11 @@ def choose_project():
     print('Opening {}.'.format(chosen_project))
     return chosen_project
 
+def open_csv():
+    pass
+
+def save_csv():
+    pass
 
 def handle__tracks_info_file():
     # Go through the lines in the index
