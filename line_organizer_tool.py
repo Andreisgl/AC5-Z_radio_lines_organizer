@@ -123,12 +123,6 @@ def handle__tracks_info_file():
         csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
         line_file_dump = [x for x in csv_reader]
 
-        # Write/Rewrite header
-        #file_header = line_file_dump[0]
-        # "tracks_pure_info" will be the main list referenced when indexing
-        #line_pure_info = [x for x in line_file_dump[1:]] # Cut off only ID
-
-    
     # From here, pass "line_pure_info" as a parameter
     # to an indexing prompt function,
     # which will return an updated list.
@@ -144,8 +138,6 @@ def handle__tracks_info_file():
         
         for row in edited_file_data:
             line_writer.writerow(row)
-
-    pass
 
 def surf_lines(line_info, ignore_unknowns):
     # This will surf the lines and see what data needs completion.
@@ -165,10 +157,6 @@ def surf_lines(line_info, ignore_unknowns):
 
     num_static_columns = 2 # Ammount of static columns (ID, file name)
 
-    #SAMPLING
-    # Sample part of full dataset for testing
-    #line_info = line_info[:20]
-
 
     # Split data into parts
     header = line_info[0] # Get header
@@ -184,7 +172,6 @@ def surf_lines(line_info, ignore_unknowns):
     static_columns = [x[:num_static_columns] for x in static_columns]
 
 
-    #print('Full set:\n{}'.format(line_info))
     quit = False
     for line_index, line in enumerate(data_set):
         if quit: # If user chose to quit in previous line
