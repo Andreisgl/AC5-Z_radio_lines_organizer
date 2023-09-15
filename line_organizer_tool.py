@@ -124,22 +124,92 @@ def handle__tracks_info_file():
         line_file_dump = [x for x in csv_reader]
 
         # Write/Rewrite header
-        file_header = line_file_dump[0]
+        #file_header = line_file_dump[0]
         # "tracks_pure_info" will be the main list referenced when indexing
-        line_pure_info = [x for x in line_file_dump[1:]] # Cut off only ID
+        #line_pure_info = [x for x in line_file_dump[1:]] # Cut off only ID
 
     
     # From here, pass "line_pure_info" as a parameter
     # to an indexing prompt function,
     # which will return an updated list.
     # The current function will take it and save it to the .csv file.
-    aux = surf_lines(line_pure_info)
+    aux = surf_lines(line_file_dump, True)
 
 
     pass
 
-def surf_lines(line_info):
+def surf_lines(line_info, ignore_unknowns):
+    # This will surf the lines and see what data needs completion.
+    # Receives the "line_info" of read file, and value for "ignore_unknowns".
+    #
+    # "ignore_unknowns": During field completion,
+    # skip values marked with '?', that couldn't be determined by the user.
+    
+    # Types of special data that can be found in a field
+    empty_data = '' # Empty. Must be filled out.
+    unknown_data = '?' # Seen, but not known yet. Must be skipped.
+    dummy_data = 'dummy' # Marks dummy files. Skip & mark whole line as dummy.
+    
+    # Types of special data that can be input in a field
+    entry_dummy = dummy_data # Same as before
+    entry_terminate = '' # Char that terminates a prompt when entered
 
+    header = line_info[0] # Get header
+    line_info = line_info[1:] # Remove header from list.
+    data_set = line_info # Pass info to 'data_set'.
+
+    # Sample part of full dataset for testing
+    data_set = data_set[:20]
+
+    # Remove ID and track name from editable data
+    data_set = [x[2:] for x in data_set]
+
+    print('Full set:\n{}'.format(line_info))
+    quit = False
+    for line in data_set:
+        if quit: # If user chose to quit in previous line
+            break
+        print(line)
+        for index, field in enumerate(line):
+            # Decide whatto do based on data
+            if dummy_data in line: # Mark whole line and skip.
+                line = [dummy_data for x in line]
+                print(field + ' is dummy!')
+                break
+            elif field == unknown_data: # Determine what to do
+                if ignore_unknowns:
+                    print(field + ' is unk!')
+                    print('skip')
+                    continue # Skip field
+                else:
+                    print(field + ' is unk!')
+                    print('prompt')
+                    pass # Go ahead to prompt
+            elif field == empty_data: # Must be filled up
+                print(field + ' is empty!')
+                print('prompt')
+                pass # Go ahead to prompt
+            else: # Is user-input data. Skip.
+                print(field + ' is already filled out!')
+                print('skip')
+                continue # Skip field
+        
+            # Data entry
+            answer = input('Enter your data for {}'.format(field))
+            if answer == entry_terminate:
+                # Quit prompt
+                quit = True
+                break
+            elif answer == entry_dummy:
+                # Mark whole line as dummy and skip
+                line = [dummy_data for x in line]
+                break
+            else: # Pass answer to field
+                field = answer
+                pass
+
+    return # Do output stuff later
+        
     pass
 
 
