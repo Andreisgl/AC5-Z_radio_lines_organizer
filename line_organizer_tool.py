@@ -159,8 +159,7 @@ def handle__tracks_info_file():
 
 
     # Rewrite file
-    os.remove(LINE_INFO_FILE_PATH) # Remove old file
-    write_row_line_data_csv(edited_file_data, True, True)
+    write_row_line_data_csv(edited_file_data, True, False)
 
 def surf_lines(line_info, ignore_unknowns):
     # This will surf the lines and see what data needs completion.
