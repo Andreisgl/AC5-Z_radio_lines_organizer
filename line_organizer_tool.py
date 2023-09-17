@@ -97,30 +97,37 @@ def handle__tracks_info_file():
     constant_columns = 2
     # Init .csv file
     if not os.path.exists(LINE_INFO_FILE_PATH): # If csv does not exist
+        # Define data to be written to new file
+        # Assemble header with criteria as columns
+        for criteria in INDEXING_CRITERIA:
+            if type(criteria) == str:
+                file_header.append(criteria)
+            else: # If criteria has preset answers:
+                file_header.append(criteria[0])
+        # Constant columns. "constant_columns" = 2, since there are 2
+        file_header.insert(0, 'ID') # Insert ID column. It autoincrements.
+        file_header.insert(1, 'FILENAME') # Insert FILENAME column.
+
+        # Assemble all files
+        all_rows = []
+        for field_index, track in enumerate(track_list):
+            row = [field_index, track]
+            # Write empty data to criteria to have
+            # all columns appear as items in the list when reading later.
+            padding = ['' for x in INDEXING_CRITERIA]
+            row += padding
+            all_rows.append(row)
+        
+        # Write data to file
         with open(LINE_INFO_FILE_PATH, mode='w', encoding='UTF8', newline='') as line_file: # Create file
             # Define delimiters
             line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
-            # Write file_header with criteria as columns
-            for criteria in INDEXING_CRITERIA:
-                if type(criteria) == str:
-                    file_header.append(criteria)
-                else:
-                    file_header.append(criteria[0])
-            # Constant columns. "constant_columns" = 2, since there are 2
-            file_header.insert(0, 'ID') # Insert ID column. It autoincrements.
-            file_header.insert(1, 'FILENAME') # Insert FILENAME column.
-            # Write file_header
-            line_writer.writerow(file_header)
 
-            # Write all files
-            for field_index, track in enumerate(track_list):
-                row = [field_index, track]
-                # Write empty data to criteria to have
-                # all columns appear as items in the list when reading later.
-                padding = ['' for x in INDEXING_CRITERIA]
-                row += padding
-                line_writer.writerow(row)
-            pass
+            line_writer.writerow(file_header) # Write header
+            for entry in all_rows: # Write entries
+                line_writer.writerow(entry)
+
+
 
     line_file_dump = []
     line_pure_info = []
