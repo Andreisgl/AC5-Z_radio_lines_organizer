@@ -71,8 +71,11 @@ def choose_project():
     print('Opening {}.'.format(chosen_project))
     return chosen_project
 
-def open_csv():
-    pass
+def get_rows_csv():
+    # Opens csv and returns all rows
+    with open(LINE_INFO_FILE_PATH, mode='r', encoding='UTF8', newline='') as line_file: # Open file
+        csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
+        return [x for x in csv_reader]
 
 def write_row_csv(data, append):
     # Write to the csv file.
@@ -138,9 +141,7 @@ def handle__tracks_info_file():
 
     line_file_dump = []
     line_pure_info = []
-    with open(LINE_INFO_FILE_PATH, mode='r', encoding='UTF8', newline='') as line_file: # Open file
-        csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
-        line_file_dump = [x for x in csv_reader]
+    line_file_dump = get_rows_csv()
 
     # From here, pass "line_pure_info" as a parameter
     # to an indexing prompt function,
