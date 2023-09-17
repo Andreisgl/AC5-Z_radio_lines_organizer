@@ -196,27 +196,18 @@ def surf_lines(line_info, ignore_unknowns):
         for field_index, field in enumerate(line):
             current_field = editable_header[field_index]
             print(current_field)
-            # Decide whatto do based on data
+            # Decide what to do based on data
             if dummy_data in line: # Mark whole line and skip.
                 data_set[line_index] = [dummy_data for x in line]
-                print('is dummy!')
                 break
             elif field == unknown_data: # Determine what to do
                 if ignore_unknowns:
-                    print('is unk!')
-                    print('skip')
                     continue # Skip field
                 else:
-                    print('is unk!')
-                    print('prompt')
                     pass # Go ahead to prompt
             elif field == empty_data: # Must be filled up
-                print('is empty!')
-                print('prompt')
                 pass # Go ahead to prompt
             else: # Is user-input data. Skip.
-                print('is already filled out!')
-                print('skip')
                 continue # Skip field
         
             # Data entry
