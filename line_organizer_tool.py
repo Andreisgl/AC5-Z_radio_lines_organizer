@@ -74,8 +74,19 @@ def choose_project():
 def open_csv():
     pass
 
-def save_csv():
-    pass
+def write_row_csv(data, append):
+    # Write to the csv file.
+    # If append == True, append to file.
+    # Else, overwrite it.
+    mode = ''
+    if append:
+        mode = 'a'
+    else:
+        mode = 'w'
+
+    with open(LINE_INFO_FILE_PATH, mode=mode, encoding='UTF8', newline='') as line_file: # Create file
+            line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
+            line_writer.writerow(data)
 
 def handle__tracks_info_file():
     # Go through the lines in the index
@@ -119,13 +130,9 @@ def handle__tracks_info_file():
             all_rows.append(row)
         
         # Write data to file
-        with open(LINE_INFO_FILE_PATH, mode='w', encoding='UTF8', newline='') as line_file: # Create file
-            # Define delimiters
-            line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
-
-            line_writer.writerow(file_header) # Write header
-            for entry in all_rows: # Write entries
-                line_writer.writerow(entry)
+        write_row_csv(file_header, True) # Write header
+        for entry in all_rows: # Write entries
+            write_row_csv(entry, True)
 
 
 
@@ -141,15 +148,11 @@ def handle__tracks_info_file():
     # The current function will take it and save it to the .csv file.
     edited_file_data = surf_lines(line_file_dump, True)
 
-    os.remove(LINE_INFO_FILE_PATH) # Remove old file
 
     # Rewrite file
-    with open(LINE_INFO_FILE_PATH, mode='w', encoding='UTF8', newline='') as line_file: # Create file
-        # Define delimiters
-        line_writer = csv.writer(line_file, delimiter='\\', quotechar='`')
-        
-        for row in edited_file_data:
-            line_writer.writerow(row)
+    os.remove(LINE_INFO_FILE_PATH) # Remove old file
+    for row in edited_file_data:
+        write_row_csv(row, True)
 
 def surf_lines(line_info, ignore_unknowns):
     # This will surf the lines and see what data needs completion.
