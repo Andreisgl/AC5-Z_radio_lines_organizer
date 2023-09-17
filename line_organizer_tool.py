@@ -71,13 +71,13 @@ def choose_project():
     print('Opening {}.'.format(chosen_project))
     return chosen_project
 
-def get_rows_csv():
+def get_rows_line_data_csv():
     # Opens csv and returns all rows
     with open(LINE_INFO_FILE_PATH, mode='r', encoding='UTF8', newline='') as line_file: # Open file
         csv_reader = csv.reader(line_file, delimiter='\\', quotechar='`')
         return [x for x in csv_reader]
 
-def write_row_csv(data, append):
+def write_row_line_data_csv(data, append):
     # Write to the csv file.
     # If append == True, append to file.
     # Else, overwrite it.
@@ -133,15 +133,15 @@ def handle__tracks_info_file():
             all_rows.append(row)
         
         # Write data to file
-        write_row_csv(file_header, True) # Write header
+        write_row_line_data_csv(file_header, True) # Write header
         for entry in all_rows: # Write entries
-            write_row_csv(entry, True)
+            write_row_line_data_csv(entry, True)
 
 
 
     line_file_dump = []
     line_pure_info = []
-    line_file_dump = get_rows_csv()
+    line_file_dump = get_rows_line_data_csv()
 
     # From here, pass "line_pure_info" as a parameter
     # to an indexing prompt function,
@@ -153,7 +153,7 @@ def handle__tracks_info_file():
     # Rewrite file
     os.remove(LINE_INFO_FILE_PATH) # Remove old file
     for row in edited_file_data:
-        write_row_csv(row, True)
+        write_row_line_data_csv(row, True)
 
 def surf_lines(line_info, ignore_unknowns):
     # This will surf the lines and see what data needs completion.
