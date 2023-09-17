@@ -175,6 +175,8 @@ def surf_lines(line_info, ignore_unknowns):
     
     # Types of special data that can be input in a field
     entry_dummy = dummy_data # Same as before
+    skip_line = '||' # Skip whole line
+    unknown_line = '?:' # Mark whole line as unknown
     entry_terminate = '\\' # Char that terminates a prompt when entered
 
     num_static_columns = 2 # Ammount of static columns (ID, file name)
@@ -198,7 +200,7 @@ def surf_lines(line_info, ignore_unknowns):
     for line_index, line in enumerate(data_set):
         if quit: # If user chose to quit in previous line
             break
-        print(static_columns[line_index][1]) # Print file name
+        print('\n' + static_columns[line_index][1]) # Print file name
         for field_index, field in enumerate(line):
             current_field = editable_header[field_index]
             print(current_field)
@@ -226,6 +228,11 @@ def surf_lines(line_info, ignore_unknowns):
                 # Mark whole line as dummy and skip
                 data_set[line_index] = [dummy_data for x in line]
                 break
+            elif answer == skip_line: # Skip line without inputting
+                break
+            elif answer == unknown_line: # Mark whole line as unknown
+                data_set[line_index] = [unknown_data for x in line]
+                pass
             else: # Pass answer to field
                 data_set[line_index][field_index] = answer
                 pass
