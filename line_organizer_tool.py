@@ -42,22 +42,43 @@ def check_paths():
     # The existence of this file indicates a dir is a project
     global PROJECT_FLAG_FILE_PATH 
     
+    # Names and paths
     PROJECT_NAME = chosen_project
     PROJECT_PATH = os.path.join(PROJECTS_DB_PATH, PROJECT_NAME)
     PROJECT_FLAG_FILE_PATH = os.path.join(PROJECT_PATH, 'project.ACL')
     LINES_FOLDER_PATH = os.path.join(PROJECT_PATH, 'lines')
     LINE_INFO_FILE_PATH = os.path.join(PROJECT_PATH, 'line_data.csv')
 
+    # Track info stuff
+    global TRACKS_ARE_BGM
+    TRACK_TYPE_HEADER = 'TRACK_TYPE:'
+    TRACK_TYPE_OPTIONS = ['BGM', 'RADIO']
+
+    # Check if paths exist
     if not os.path.exists(PROJECT_PATH):
         os.mkdir(PROJECT_PATH)
 
     if not os.path.exists(LINES_FOLDER_PATH):
         os.mkdir(LINES_FOLDER_PATH)
 
-    if not os.path.exists(PROJECT_FLAG_FILE_PATH):
-        with open(PROJECT_FLAG_FILE_PATH, 'w'):
-            # File can be empty. Maybe I could add stuff here later...
-            pass
+    if not os.path.exists(PROJECT_FLAG_FILE_PATH): # If project is new:
+        TRACKS_ARE_BGM = get_track_playback_info(True) # Ask user track type
+        with open(PROJECT_FLAG_FILE_PATH, 'w', encoding="utf-8") as file:
+            # Write track type info:
+            if TRACKS_ARE_BGM: # Tracks are BGM
+                file.write(TRACK_TYPE_HEADER + TRACK_TYPE_OPTIONS[0])
+            else: # Tracks are RADIO
+                file.write(TRACK_TYPE_HEADER + TRACK_TYPE_OPTIONS[1])
+    else: # If file already exists
+        with open(PROJECT_FLAG_FILE_PATH, 'r', encoding="utf-8") as file:
+            data = (file.read()).splitlines()
+            # Find track type info
+            track_type_entry = [x for x in data if TRACK_TYPE_HEADER in x][0]
+            if TRACK_TYPE_OPTIONS[0] in track_type_entry:
+                get_track_playback_info(False, True)
+            else:
+                get_track_playback_info(False, False)
+        pass
     #endregion
 
 def prompt_user_list(option_list):
@@ -100,7 +121,6 @@ def choose_project():
 
     print('Opening {}.'.format(chosen_project))
 
-    get_track_playback_info()
     return chosen_project
 
 def get_rows_line_data_csv():
@@ -288,10 +308,14 @@ def surf_lines(line_info, ignore_unknowns):
     
     return output_data
 
-def get_track_playback_info():
+
+def get_track_playback_info(new_file, is_bgm = None):
     # This function prompts the use
     # If tracks are BGM, choose BGM parameters.
     # Else, use RADIO parameters.
+    #
+    # If new_file == true, prompt user to input type data
+    # Else, receive if tracks are BGM or not
 
     # Argument list for MFAudio, with indexes for the lists used in this code
         # 0 -  /IFnnnnn	Input frequency
@@ -318,18 +342,22 @@ def get_track_playback_info():
 
     TYPE_OPTIONS = ['BGM', 'RADIO']
 
-    print('Are you working with BGM or RADIO?')
-    answer = prompt_user_list(TYPE_OPTIONS)
-    if answer == 0:
-        TRACKS_ARE_BGM = True
-        MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
-    else:
-        TRACKS_ARE_BGM = False
-        MFAUDIO_ARG_SET = MFAUDIO_RADIO_ARGS
-    
-    
-    
-    pass
+    if new_file: # If file is new, prompt user.
+        print('Are you working with BGM or RADIO?')
+        answer = prompt_user_list(TYPE_OPTIONS)
+        if answer == 0:
+            TRACKS_ARE_BGM = True
+            MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
+        else:
+            TRACKS_ARE_BGM = False
+            MFAUDIO_ARG_SET = MFAUDIO_RADIO_ARGS
+    else: # If file already exists, get type data from parameter
+        if not is_bgm:
+            TRACKS_ARE_BGM = False
+            MFAUDIO_ARG_SET = MFAUDIO_RADIO_ARGS
+        else:
+            TRACKS_ARE_BGM = True
+            MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
 
 def play_track(track_path):
     # This method plays the chosen track through MFAudio,
