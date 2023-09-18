@@ -195,8 +195,7 @@ def handle__tracks_info_file():
         
         # Write data to file
         write_row_line_data_csv(file_header, False, True) # Write header
-        for entry in all_rows: # Write entries
-            write_row_line_data_csv(entry, True, True)
+        write_row_line_data_csv(all_rows, True, True)
 
 
 
@@ -309,7 +308,7 @@ def surf_lines(line_info, ignore_unknowns):
     return output_data
 
 
-def get_track_playback_info(new_file, is_bgm = None):
+def get_track_playback_info(new_file, is_bgm = True):
     # This function prompts the use
     # If tracks are BGM, choose BGM parameters.
     # Else, use RADIO parameters.
