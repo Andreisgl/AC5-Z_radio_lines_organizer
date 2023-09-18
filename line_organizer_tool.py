@@ -114,10 +114,18 @@ def prompt_user_list(option_list):
 def choose_project():
     # Prompt user to choose which project to open/create
     # For now, name is hard-coded.
-    print('Choose which project to open/create:')
-    print('Oops! Chose it for you!')
+    global PROJECTS_DB_PATH
 
-    chosen_project = 'test_project'
+    projects_list = os.listdir(PROJECTS_DB_PATH)
+    create_new_flag = 'CREATE NEW'
+    projects_list.append(create_new_flag)
+
+    print('Choose which project to open/create:')
+    
+    chosen_project = projects_list[prompt_user_list(projects_list)]
+    if chosen_project == create_new_flag:
+        answer = input('Input the new project\'s name: ')
+        chosen_project = answer
 
     print('Opening {}.'.format(chosen_project))
 
@@ -158,6 +166,9 @@ def handle__tracks_info_file():
     global LINES_FOLDER_PATH
     global LINE_INFO_FILE_PATH
 
+    global INPUT_EXIT_MESSAGE
+    global INPUT_CONTINUE_MESSAGE
+
     track_list = os.listdir(LINES_FOLDER_PATH)
 
     # What info will be requested to index each line.
@@ -171,7 +182,8 @@ def handle__tracks_info_file():
     # How many of the first rows shouldn't be editable
     constant_columns = 2
     # Init .csv file
-    if not os.path.exists(LINE_INFO_FILE_PATH): # If csv does not exist
+    # If csv does not exist and there are tracks to be indexed:
+    if (not os.path.exists(LINE_INFO_FILE_PATH)) and len(track_list) != 0:
         # Define data to be written to new file
         # Assemble header with criteria as columns
         for criteria in INDEXING_CRITERIA:
@@ -196,7 +208,12 @@ def handle__tracks_info_file():
         # Write data to file
         write_row_line_data_csv(file_header, False, True) # Write header
         write_row_line_data_csv(all_rows, True, True)
-
+    elif len(track_list) == 0: # If there are no tracks to be indexed:
+        print('There are no tracks to be indexed!')
+        print('Copy tracks to the "{}" folder'
+              .format(os.path.basename(LINES_FOLDER_PATH)))
+        input(INPUT_EXIT_MESSAGE)
+        return False
 
 
     line_file_dump = []
@@ -390,6 +407,9 @@ def play_track(track_path):
     subprocess.Popen(args_string)
     
     pass
+
+INPUT_EXIT_MESSAGE = 'PRESS ENTER TO EXIT'
+INPUT_CONTINUE_MESSAGE = 'PRESS ENTER TO CONTINUE'
 
 if __name__ == "__main__":
     main()
