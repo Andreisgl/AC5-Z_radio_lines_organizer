@@ -260,7 +260,7 @@ def surf_lines(line_info, ignore_unknowns):
                 track_path = os.path.join(LINES_FOLDER_PATH, track_name)
                 play_track(track_path)
             playback = False
-            
+
             # Data entry
             answer = input('Enter your data for {}: '.format(current_field))
             if answer == entry_terminate:
@@ -273,9 +273,9 @@ def surf_lines(line_info, ignore_unknowns):
                 break
             elif answer == skip_line: # Skip line without inputting
                 break
-            elif answer == unknown_line: # Mark whole line as unknown
+            elif answer == unknown_line: # Mark whole line as unknown and skip
                 data_set[line_index] = [unknown_data for x in line]
-                pass
+                break
             else: # Pass answer to field
                 data_set[line_index][field_index] = answer
                 pass
