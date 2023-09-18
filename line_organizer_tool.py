@@ -5,6 +5,7 @@
 
 import os
 import csv
+import subprocess
 
 def main():
     check_paths()
@@ -59,6 +60,35 @@ def check_paths():
             pass
     #endregion
 
+def prompt_user_list(option_list):
+    # This function creates a prompt to choose from a list.
+    # Handles invalid answers. Answer must be an index.
+    # Returns index
+
+    for index, entry in enumerate(option_list):
+        print('{} - {}'.format(index, entry))
+    print()
+
+    index_range = len(option_list)-1
+    valid_index = True
+    while True:
+        answer = ''
+        if not valid_index: # Cisplay error message accordig to flag
+            print('Input a valid index!')
+
+        try:
+            answer = int(input('Enter index: ')) # Receive answer
+        except ValueError:
+            valid_index = False # Set flag to false on invalidity
+            continue
+
+        if answer < 0 or answer > index_range:
+            valid_index = False # Set flag to false on invalidity
+            continue
+
+        break
+        
+    return answer
 
 def choose_project():
     # Prompt user to choose which project to open/create
@@ -69,6 +99,8 @@ def choose_project():
     chosen_project = 'test_project'
 
     print('Opening {}.'.format(chosen_project))
+
+    get_track_playback_info()
     return chosen_project
 
 def get_rows_line_data_csv():
@@ -98,6 +130,7 @@ def write_row_line_data_csv(data, is_list, append):
                 line_writer.writerows(data)
             else:
                 line_writer.writerow(data)
+
 
 def handle__tracks_info_file():
     # Go through the lines in the index
@@ -197,13 +230,17 @@ def surf_lines(line_info, ignore_unknowns):
 
 
     quit = False
+    
     for line_index, line in enumerate(data_set):
         if quit: # If user chose to quit in previous line
             break
-        print('\n' + static_columns[line_index][1]) # Print file name
-        for field_index, field in enumerate(line):
+        playback = True
+        track_name = static_columns[line_index][1]
+        print('\n' + track_name) # Print file name
+        
+        for field_index, field in enumerate(line): # Check field
             current_field = editable_header[field_index]
-            print(current_field)
+            #print(current_field)
             # Decide what to do based on data
             if dummy_data in line: # Mark whole line and skip.
                 data_set[line_index] = [dummy_data for x in line]
@@ -217,7 +254,13 @@ def surf_lines(line_info, ignore_unknowns):
                 pass # Go ahead to prompt
             else: # Is user-input data. Skip.
                 continue # Skip field
-        
+            
+            # Play track for user
+            if playback:
+                track_path = os.path.join(LINES_FOLDER_PATH, track_name)
+                play_track(track_path)
+            playback = False
+            
             # Data entry
             answer = input('Enter your data for {}: '.format(current_field))
             if answer == entry_terminate:
@@ -245,6 +288,81 @@ def surf_lines(line_info, ignore_unknowns):
     
     return output_data
 
+def get_track_playback_info():
+    # This function prompts the use
+    # If tracks are BGM, choose BGM parameters.
+    # Else, use RADIO parameters.
+
+    # Argument list for MFAudio, with indexes for the lists used in this code
+        # 0 -  /IFnnnnn	Input frequency
+        # 1 -  /ICn	Input channels
+        # 2 -  /IIxxxx	Input interleave (hex)
+        # 3 -  /IHxxxx	Input headerskip (hex)
+        # 4 -  /OTtttt	Output type (WAVU, VAGC,
+        # 	            SS2U, SS2C, RAWU, RAWC)
+        # 5 -  /OFnnnnn	Output frequency
+        # 6 -  /OCn	Output channels
+        # 7 -  /OIxxxx	Output interleave (hex)
+        # 8 -  "InputFile"	Input file to play/convert
+        # 9 -  "OutputFile"	Output file to convert to
+
+    global TRACKS_ARE_BGM
+    global MFAUDIO_ARG_SET
+    global MFAUDIO_PATH
+    MFAUDIO_PATH = os.path.join(os.path.dirname(SCRIPT_PATH), 'MFAudio', 'MFAudio.exe')
+
+    # Argument set for BGM and RADIO tracks.
+    # AFAIK, there is no reason for them to differ between AC5 and ACZ.
+    MFAUDIO_BGM_ARGS = [44100, 2, 320, 0, 'WAVU', 44100, 2, 320]
+    MFAUDIO_RADIO_ARGS = [22050, 1, 320, 0, 'WAVU', 22050, 1, 320]
+
+    TYPE_OPTIONS = ['BGM', 'RADIO']
+
+    print('Are you working with BGM or RADIO?')
+    answer = prompt_user_list(TYPE_OPTIONS)
+    if answer == 0:
+        TRACKS_ARE_BGM = True
+        MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
+    else:
+        TRACKS_ARE_BGM = False
+        MFAUDIO_ARG_SET = MFAUDIO_RADIO_ARGS
+    
+    
+    
+    pass
+
+def play_track(track_path):
+    # This method plays the chosen track through MFAudio,
+    # with the predefined arguments chosen on project creation
+    global MFAUDIO_ARG_SET
+    global SCRIPT_PATH
+    global MFAUDIO_PATH
+
+    input_filename = os.path.basename(track_path)
+    
+    args = ['/IF', '/IC', '/II', '/IH', '/OT', '/OF', '/OC', '/OI'] #Contains the core arguments.
+    
+    # Concatenate args and values
+    args = [args[index] + str(MFAUDIO_ARG_SET[index]) for index, x in enumerate(args)]
+    args.append('"{}"'.format(track_path)) # Append track path to args
+    args.insert(0, MFAUDIO_PATH)
+
+    ## Adds a input filename to 'argumentBuffer' string and...
+    #argument_buffer = exe_filename + ' ' + argument_buffer + '"' + DESTINATION_PATH + '\\'+ input_filename + '"'
+    #
+    #if mode == 0:  # ... if the mode is "Convert (0)", add output filename as well.
+    #    argument_buffer = argument_buffer + ' ' + '"' + output_filename + '"'
+    #
+    args_string = ''
+    for index, arg in enumerate(args):
+        args_string += arg
+        if index < 9:
+            args_string += ' '
+    
+
+    subprocess.Popen(args_string)
+    
+    pass
 
 if __name__ == "__main__":
     main()
