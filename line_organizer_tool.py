@@ -127,7 +127,7 @@ def choose_project():
         answer = input('Input the new project\'s name: ')
         chosen_project = answer
 
-    print('Opening {}.'.format(chosen_project))
+    print('Opening "{}".'.format(chosen_project))
 
     return chosen_project
 
@@ -237,6 +237,7 @@ def surf_lines(line_info, ignore_unknowns):
     # "ignore_unknowns": During field completion,
     # skip values marked with '?', that couldn't be determined by the user.
     
+    global INPUT_CONTINUE_MESSAGE
     # Types of special data that can be found in a field
     empty_data = '' # Empty. Must be filled out.
     unknown_data = '?' # Seen, but not known yet. Must be skipped.
@@ -244,12 +245,29 @@ def surf_lines(line_info, ignore_unknowns):
     
     # Types of special data that can be input in a field
     entry_dummy = dummy_data # Same as before
-    skip_line = '||' # Skip whole line
-    unknown_line = '?:' # Mark whole line as unknown
+    entry_skip_line = '||' # Skip whole line
+    entry_unknown_line = '?:' # Mark whole line as unknown
     entry_terminate = '\\' # Char that terminates a prompt when entered
 
     num_static_columns = 2 # Ammount of static columns (ID, file name)
 
+    #region # Special inputs
+    # Print help screen that show what commands can be given:
+    help_messages = [
+        '\nTime to fill out the data!',
+        'Special commands:',
+        '"COMMAND" - Description'.format(),
+
+        '{} - Dummy data. The whole line will be marked as such'.format(dummy_data),
+        '{} - Skip line. Skip whole line without inputting anything'.format(entry_skip_line),
+        '{} - Unknown data. When you don\'t know the answer for a field'.format(unknown_data),
+        '{} - Unknown line. Mark whole line as unknown'.format(entry_unknown_line),
+        '{} - Terminate. Stop inputting data, save and quit application'.format(entry_terminate),]
+    for help in help_messages:
+        print(help)
+
+    input(INPUT_CONTINUE_MESSAGE)
+    #endregion
 
     # Split data into parts
     header = line_info[0] # Get header
@@ -272,7 +290,7 @@ def surf_lines(line_info, ignore_unknowns):
             break
         playback = True
         track_name = static_columns[line_index][1]
-        print('\n' + track_name) # Print file name
+        
         
         for field_index, field in enumerate(line): # Check field
             current_field = editable_header[field_index]
@@ -292,6 +310,7 @@ def surf_lines(line_info, ignore_unknowns):
                 continue # Skip field
             
             # Play track for user
+            print('\n' + track_name) # Print file name
             if playback:
                 track_path = os.path.join(LINES_FOLDER_PATH, track_name)
                 play_track(track_path)
@@ -307,9 +326,9 @@ def surf_lines(line_info, ignore_unknowns):
                 # Mark whole line as dummy and skip
                 data_set[line_index] = [dummy_data for x in line]
                 break
-            elif answer == skip_line: # Skip line without inputting
+            elif answer == entry_skip_line: # Skip line without inputting
                 break
-            elif answer == unknown_line: # Mark whole line as unknown and skip
+            elif answer == entry_unknown_line: # Mark whole line as unknown and skip
                 data_set[line_index] = [unknown_data for x in line]
                 break
             else: # Pass answer to field
