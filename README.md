@@ -2,7 +2,7 @@
 With dubbing and whatnot in mind, this script seeks to facilitate the process of organizing radio files from Ace Combat Zero/5
 
 ## CONCEPT
-After importing tracks extracted from the game with the "bgm_pac_ace" tool, the script will go through the tracks, reproduce the using MFAudio, and prompt the user to fill out information about them, according to some indexing criteria. They are as follow:
+After importing tracks extracted from the game with the "bgm_pac_ace" tool, the script will go through the tracks, reproduce them using MFAudio, and prompt the user to fill out information about them, according to some indexing criteria. They are as follow:
 
 ### INDEXING_CRITERIA 
     'CHARACTER' - Who speaks the line
