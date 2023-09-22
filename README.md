@@ -81,6 +81,6 @@ This tool is a WIP. Some of the features implement and objectives to reach are t
 
 - Organize files: When prompted, make a copy of the tracks and separate them in folders based on the indexing criteria
 
-- Improve input and collection of preset values - Simplify code and collect preset values from previous inputs to spare the typing and avoid typos
+- Enforce preset values - Use preset values to spare the typing and avoid typos
 
 - Detect dummy files automatically - Dummy files have the word "Dummy" in their filenames. Detect it and mark line accordingly
