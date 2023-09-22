@@ -1,7 +1,10 @@
 # Project-specific ignores:
-PROJECTS
-*.csv
+PROJECTS/*
+*.npsf
+#*.csv
 MFAudio/
+
+!/PROJECTS/ACZ
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
