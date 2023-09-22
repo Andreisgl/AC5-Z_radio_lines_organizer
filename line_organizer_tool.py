@@ -305,15 +305,6 @@ def surf_lines(line_info, ignore_unknowns):
         for field_index, field in enumerate(line): # Check field
             current_field = editable_header[field_index]
 
-            # Check if current field has preset values
-            field_has_preset_values = False
-            curr_field_preset_values = []
-            curr_criterion = INDEXING_CRITERIA[field_index]
-            if type(curr_criterion) == list:
-                curr_field_preset_values = curr_criterion[1]
-                field_has_preset_values = True
-                pass
-
             # Decide what to do based on data
             if dummy_data in line: # Mark whole line and skip.
                 data_set[line_index] = [dummy_data for x in line]
@@ -338,13 +329,7 @@ def surf_lines(line_info, ignore_unknowns):
             playback = False
 
             # Data entry
-            if field_has_preset_values: # If there are preset values, use them
-                print('Choose preset data for {}: '.format(current_field))
-                answer = prompt_user_list(curr_field_preset_values, True)
-                if type(answer) == int: # If answer is an index # This might be redundant! Check laterrrrrrrrr
-                    answer = curr_field_preset_values[answer]
-            else:
-                answer = input('Enter your data for {}: '.format(current_field))
+            answer = input('Enter your data for {}: '.format(current_field))
 
             if answer == entry_terminate:
                 # Quit prompt
