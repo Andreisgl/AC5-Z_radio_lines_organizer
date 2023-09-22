@@ -81,20 +81,25 @@ def check_paths():
         pass
     #endregion
 
-def prompt_user_list(option_list):
+def prompt_user_list(option_list, custom_answer):
     # This function creates a prompt to choose from a list.
     # Handles invalid answers. Answer must be an index.
-    # Returns index
+    #
+    # custom_answer: If true, allows for a custom answer
+    # Returns index. If custom, return custom answer.
+
+    if custom_answer:
+        option_list.append('Other')
 
     for index, entry in enumerate(option_list):
         print('{} - {}'.format(index, entry))
     print()
 
-    index_range = len(option_list)-1
+    max_index = len(option_list)-1
     valid_index = True
     while True:
         answer = ''
-        if not valid_index: # Cisplay error message accordig to flag
+        if not valid_index: # Display error message accordig to flag
             print('Input a valid index!')
 
         try:
@@ -103,12 +108,18 @@ def prompt_user_list(option_list):
             valid_index = False # Set flag to false on invalidity
             continue
 
-        if answer < 0 or answer > index_range:
+        if answer < 0 or answer > max_index: # Answer is outisde index range
             valid_index = False # Set flag to false on invalidity
             continue
-
-        break
         
+        valid_index = True
+        if custom_answer and answer == max_index:
+            user_input = input('Input your answer: ')
+            # Changing the list here changes the list passed as parameter.
+            option_list.pop() # Remove old item
+            option_list.append(user_input) # Insert custom answer
+        break
+
     return answer
 
 def choose_project():
@@ -117,15 +128,11 @@ def choose_project():
     global PROJECTS_DB_PATH
 
     projects_list = os.listdir(PROJECTS_DB_PATH)
-    create_new_flag = 'CREATE NEW'
-    projects_list.append(create_new_flag)
 
     print('Choose which project to open/create:')
     
-    chosen_project = projects_list[prompt_user_list(projects_list)]
-    if chosen_project == create_new_flag:
-        answer = input('Input the new project\'s name: ')
-        chosen_project = answer
+    chosen_project = projects_list[prompt_user_list(projects_list, True)]
+
 
     print('Opening "{}".'.format(chosen_project))
 
@@ -166,6 +173,8 @@ def handle__tracks_info_file():
     global LINES_FOLDER_PATH
     global LINE_INFO_FILE_PATH
 
+    global INDEXING_CRITERIA
+
     global INPUT_EXIT_MESSAGE
     global INPUT_CONTINUE_MESSAGE
 
@@ -175,7 +184,7 @@ def handle__tracks_info_file():
     # In the sublists, default values for each criteria, if they are a closed set.
     INDEXING_CRITERIA = ['CHARACTER',
                         'MISSION_NUMBER',
-                        ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT']],
+                        ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT', 'NONE']],
                         'TEXT']
 
     file_header = []
@@ -236,7 +245,8 @@ def surf_lines(line_info, ignore_unknowns):
     #
     # "ignore_unknowns": During field completion,
     # skip values marked with '?', that couldn't be determined by the user.
-    
+    global INDEXING_CRITERIA
+
     global INPUT_CONTINUE_MESSAGE
     # Types of special data that can be found in a field
     empty_data = '' # Empty. Must be filled out.
@@ -294,7 +304,16 @@ def surf_lines(line_info, ignore_unknowns):
         
         for field_index, field in enumerate(line): # Check field
             current_field = editable_header[field_index]
-            #print(current_field)
+
+            # Check if current field has preset values
+            field_has_preset_values = False
+            curr_field_preset_values = []
+            curr_criterion = INDEXING_CRITERIA[field_index]
+            if type(curr_criterion) == list:
+                curr_field_preset_values = curr_criterion[1]
+                field_has_preset_values = True
+                pass
+
             # Decide what to do based on data
             if dummy_data in line: # Mark whole line and skip.
                 data_set[line_index] = [dummy_data for x in line]
@@ -309,15 +328,24 @@ def surf_lines(line_info, ignore_unknowns):
             else: # Is user-input data. Skip.
                 continue # Skip field
             
-            # Play track for user
-            print('\n' + track_name) # Print file name
-            if playback:
+            
+            if playback: # This is executed only once per track
+                # Play track for user
+                print('\n' + track_name) # Print file name
+
                 track_path = os.path.join(LINES_FOLDER_PATH, track_name)
-                play_track(track_path)
+                play_track(track_path) # Play track
             playback = False
 
             # Data entry
-            answer = input('Enter your data for {}: '.format(current_field))
+            if field_has_preset_values: # If there are preset values, use them
+                print('Choose preset data for {}: '.format(current_field))
+                answer = prompt_user_list(curr_field_preset_values, True)
+                if type(answer) == int: # If answer is an index # This might be redundant! Check laterrrrrrrrr
+                    answer = curr_field_preset_values[answer]
+            else:
+                answer = input('Enter your data for {}: '.format(current_field))
+
             if answer == entry_terminate:
                 # Quit prompt
                 quit = True
@@ -379,7 +407,7 @@ def get_track_playback_info(new_file, is_bgm = True):
 
     if new_file: # If file is new, prompt user.
         print('Are you working with BGM or RADIO?')
-        answer = prompt_user_list(TYPE_OPTIONS)
+        answer = prompt_user_list(TYPE_OPTIONS, False)
         if answer == 0:
             TRACKS_ARE_BGM = True
             MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
