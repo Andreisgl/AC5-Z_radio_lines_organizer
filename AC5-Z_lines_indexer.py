@@ -1,10 +1,3 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCompleter
-from PyQt5.QtCore import pyqtSignal
-
-
-import sys
-
-
 
 words = ['apple', 'banana', 'cherry', 'grape', 'kiwi', 'orange', 'pear', 'strawberry']
 
