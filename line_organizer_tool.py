@@ -81,13 +81,15 @@ def check_paths():
         pass
     #endregion
 
-def prompt_user_list(option_list, custom_answer):
+def prompt_user_list(input_list, custom_answer):
     # This function creates a prompt to choose from a list.
     # Handles invalid answers. Answer must be an index.
     #
     # custom_answer: If true, allows for a custom answer
-    # Returns index. If custom, return custom answer.
+    # Returns answer. If custom, return custom answer.
 
+    option_list = input_list
+    
     if custom_answer:
         option_list.append('Other')
 
