@@ -52,7 +52,7 @@ def check_paths():
     # Track info stuff
     global TRACKS_ARE_BGM
     TRACK_TYPE_HEADER = 'TRACK_TYPE:'
-    TRACK_TYPE_OPTIONS = ['BGM', 'RADIO']
+    TRACK_TYPE_OPTIONS = ('BGM', 'RADIO')
 
     # Check if paths exist
     if not os.path.exists(PROJECT_PATH):
