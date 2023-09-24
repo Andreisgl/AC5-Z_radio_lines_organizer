@@ -1,10 +1,19 @@
-## AC5-Z_lines_indexer by Truc3 (Andreisgl @ Github, @truc3_8492 @ Twitter)
-##===============================================================
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCompleter
+from PyQt5.QtCore import pyqtSignal
 
-# This script runs through the extracted audio lines in a folder
-# and reproduces them one by one. Upon hearing it, you can enter
-# the information you know about it as prompted. This metadata 
-# will be saved to a .csv file for indexing.
 
-import os
-import PyQt5
+import sys
+
+
+
+words = ['apple', 'banana', 'cherry', 'grape', 'kiwi', 'orange', 'pear', 'strawberry']
+
+# Each entry is a tuple. First item in the tuple is the criterion name,
+# second is a list with autocomplete values
+INDEXING_CRITERIA = (('CHARACTER', []),
+                     ('TEXT', []),
+                     ('MISSION', []),
+                     ('ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT'])
+                     )
+
+
