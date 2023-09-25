@@ -27,6 +27,7 @@ acestyle_values = ['MERCENARY', 'SOLDIER', 'KNIGHT']
 
 import tkinter as tk
 from tkinter import *
+import tkinter.ttk as ttk
 from ttkwidgets.autocomplete import *
 
 
@@ -56,35 +57,40 @@ class TrackField():
     varBG = "grey"
     
     # Constructor
-    def __init__(self, parent, name, label_text, width, std_values):
+    def __init__(self, parent, name, frame_text, std_values, isradio, width):
         self.parent  = parent
         self.name = name
-        self.label_text = label_text
+        self.frame_text = frame_text
         
         self.frame1 = LabelFrame(
             parent,
-            text=label_text,
+            text=frame_text,
             fg = self.varFG, 
             bg = self.varBG,
 
         )
-        #self.label = tk.Label(
-        #    self.frame1, 
-        #    text = label_text,
-        #    fg = self.varFG, 
-        #    bg = self.varBG, 
-        #    font = (self.varFont, self.fontSize),
-        #    width=15
-        #    )
-        #self.label.grid(row=0, column=0)
         
-        self.entry = AutocompleteCombobox(
-            self.frame1,
-            width=width, 
-            font=('Times', 14),
-            completevalues=std_values
-            )
-        self.entry.grid(row=0, column=0)
+        if isradio: # If radio button option was chosen
+            control_var = tk.StringVar()
+            #value = 'aaa'
+            for index, value in enumerate(std_values):
+                self.entry = ttk.Radiobutton(
+                self.frame1,
+                    text=value,
+                variable=control_var,
+                value=value
+                )
+                self.entry.grid(row=index, column=0)
+            pass
+        else: # Display options as autocomplete combo box
+            pass
+            self.entry = AutocompleteCombobox(
+                self.frame1,
+                width=width, 
+                font=('Times', 14),
+                completevalues=std_values
+                )
+            self.entry.grid(row=0, column=0)
 
     # Allows you to grid as you would normally
     # Can subsitute pack() here or have both class methods
@@ -133,18 +139,32 @@ def main():
     #lines_input_prompt()
 
     # Create an instance of your class
-    sectionHeader = TrackField(root, "character_field","Character", 20, character_values)
+    sectionHeader = TrackField(root, "character_field","Character", character_values, False, 20)
     sectionHeader.grid(row=0, column=0)
 
-    sectionHeader3 = TrackField(root, "mission_field","Mission", 20, mission_values)
+    sectionHeader3 = TrackField(root, "mission_field","Mission", mission_values, False, 20)
     sectionHeader3.grid(row=1, column=0)
 
-    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", 20, acestyle_values)
+    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", acestyle_values, True, 20)
     sectionHeader4.grid(row=2, column=0)
 
-    sectionHeader2 = TrackField(root, "text_field","Text", 60, text_values)
+    sectionHeader2 = TrackField(root, "text_field","Text", text_values, False, 20)
     sectionHeader2.grid(row=0, column=1)
 
+    ####
+
+    # Create a Tkinter variable to store the selected option
+    var = tk.StringVar()
+
+    # Create Radiobuttons
+    option1 = tk.Radiobutton(root, text="Option 1", variable=var, value="Option 1")
+    option2 = tk.Radiobutton(root, text="Option 2", variable=var, value="Option 2")
+    option3 = tk.Radiobutton(root, text="Option 3", variable=var, value="Option 3")
+
+    ## Pack the Radiobuttons
+    #option1.pack()
+    #option2.pack()
+    #option3.pack()
 
     root.mainloop()
 
