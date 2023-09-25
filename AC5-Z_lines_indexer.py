@@ -1,13 +1,25 @@
 #region
-words = ['apple', 'banana', 'cherry', 'grape', 'kiwi', 'orange', 'pear', 'strawberry']
 
-# Each entry is a tuple. First item in the tuple is the criterion name,
-# second is a list with autocomplete values
-INDEXING_CRITERIA = (('CHARACTER', []),
-                     ('TEXT', []),
-                     ('MISSION', []),
-                     ('ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT'])
+# TODO: Change criteria in function of the chosen game
+CURRENT_GAME = 'ACZ' # 'AC5'
+INDEXING_CRITERIA = ('CHARACTER',
+                     'TEXT',
+                     'MISSION',
+                     'ACE_STYLE', 
                      )
+
+
+character_values = ['Pixy', 'AWACS', 'PJ']
+text_values = ["Galm 2 to Galm 1. I'll leave the orders to you. give us a good show",
+                                "Yo buddy, still alive?",
+                                "Galm 1 was shot down!"]
+# Mission values for both games
+mission_values_acz = ('01', '02', '03', '04', '05',
+                      '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27')
+mission_values_ac5 = ('01','02', '03', '04', '05',
+                      '06', '07', '08', '09', '10', '11A', '11B', '12A', '12B', '13', '14', '15', '16A', '16B', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27')
+mission_values = mission_values_acz # Choose wich game's values to use
+acestyle_values = ['MERCENARY', 'SOLDIER', 'KNIGHT']
 
 #endregion
 
@@ -32,7 +44,7 @@ def setup_root_window():
 
     
  
-class ui_Labels():
+class TrackField():
     '''This class sets the baseline characteristics 
     for the widgets, including font, font size, and colors
     '''
@@ -44,35 +56,35 @@ class ui_Labels():
     varBG = "grey"
     
     # Constructor
-    def __init__(self, parent, name, varText):
+    def __init__(self, parent, name, label_text, width, std_values):
         self.parent  = parent
         self.name = name
-        self.varText = varText
+        self.label_text = label_text
         
         self.frame1 = LabelFrame(
             parent,
-            text="Fruit", fg = self.varFG, 
+            text=label_text,
+            fg = self.varFG, 
             bg = self.varBG,
 
         )
-        self.label = tk.Label(
-            self.frame1, 
-            text = varText,
-            fg = self.varFG, 
-            bg = self.varBG, 
-            font = (self.varFont, self.fontSize),
-            width=15
-            )
-        self.label.grid(row=0, column=0)
+        #self.label = tk.Label(
+        #    self.frame1, 
+        #    text = label_text,
+        #    fg = self.varFG, 
+        #    bg = self.varBG, 
+        #    font = (self.varFont, self.fontSize),
+        #    width=15
+        #    )
+        #self.label.grid(row=0, column=0)
         
         self.entry = AutocompleteCombobox(
             self.frame1,
-            #text = 'aaaaa',
-            width=10, 
-            font=('Times', 18),
-            completevalues=['a', 'b', 'c']
+            width=width, 
+            font=('Times', 14),
+            completevalues=std_values
             )
-        self.entry.grid(row=1, column=0)
+        self.entry.grid(row=0, column=0)
 
     # Allows you to grid as you would normally
     # Can subsitute pack() here or have both class methods
@@ -121,14 +133,17 @@ def main():
     #lines_input_prompt()
 
     # Create an instance of your class
-    sectionHeader = ui_Labels(root, "Section Header","Character")
+    sectionHeader = TrackField(root, "character_field","Character", 20, character_values)
     sectionHeader.grid(row=0, column=0)
 
-    sectionHeader2 = ui_Labels(root, "Section aaaa","Ace Style")
-    sectionHeader2.grid(row=0, column=1)
+    sectionHeader3 = TrackField(root, "mission_field","Mission", 20, mission_values)
+    sectionHeader3.grid(row=1, column=0)
 
-    #sectionHeader3 = ui_Labels(root, "Section uuuuu","Magic LULZ Iterator")
-    #sectionHeader3.grid(row=0, column=3)
+    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", 20, acestyle_values)
+    sectionHeader4.grid(row=2, column=0)
+
+    sectionHeader2 = TrackField(root, "text_field","Text", 60, text_values)
+    sectionHeader2.grid(row=0, column=1)
 
 
     root.mainloop()
