@@ -91,23 +91,20 @@ class FieldInput():
             pass
             self.entry = AutocompleteCombobox(
                 self.frame1,
-                #width=width, 
+                width=width, 
                 font=('Times', 14),
                 completevalues=std_values
                 )
             self.entry.grid(row=0, column=0)
     
-         # Create a button to get the selected value
+        # Create a button to get the selected value
         self.get_value_button = ttk.Button(self.frame1, text="Get Value", command=self.get_combobox_value)
         self.get_value_button.grid(row=6, column=0)
-        #self.get_value_button.pack()
 
     # Allows you to grid as you would normally
     # Can subsitute pack() here or have both class methods
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
-        #self.label.grid(kwargs)
-        #self.entry.grid(kwargs)
 
     def get_combobox_value(self):
         selected_value = ''
@@ -128,21 +125,33 @@ class LineInputMenu():
         self.sisACZ = isACZ # If True, use values for ACZ. Else, use AC5
         self.sisRadio = isRadio # If True, tracks are RADIO lines.
 
+        # Create a button to get the selected value
+        self.get_value_button = ttk.Button(parent, text="Get Value", command=self.get_all_values)
+        self.get_value_button.grid(row=6, column=0)
 
         # Create an instance of your class
-        char_field = FieldInput(root, "character_field","Character", character_values, False, 20)
-        char_field.grid(row=0, column=0)
+        self.char_field = FieldInput(root, "character_field","Character", character_values, False, 20)
+        self.char_field.grid(row=0, column=0)
 
-        miss_field = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
-        miss_field.grid(row=1, column=0)
+        self.miss_field = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
+        self.miss_field.grid(row=1, column=0)
 
         acestyle_values.append('?')
-        acesty_field = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
-        acesty_field.grid(row=1, column=1)
+        self.acesty_field = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+        self.acesty_field.grid(row=1, column=1)
 
-        txt_field = FieldInput(root, "text_field","Text", text_values, False, 200)
-        txt_field.grid(row=0, column=1)
+        self.txt_field = FieldInput(root, "text_field","Text", text_values, False, 60)
+        self.txt_field.grid(row=0, column=1)
+    
+    def get_all_values(self):
+        char_choice = self.char_field.get_combobox_value()
+        miss_choice = self.miss_field.get_combobox_value()
+        acesty_choice = self.acesty_field.get_combobox_value()
+        txt_choice = self.txt_field.get_combobox_value()
         
+        all_data = [char_choice, miss_choice, acesty_choice, txt_choice]
+        print(all_data)
+        pass
         
 
 
@@ -182,7 +191,7 @@ def lines_input_prompt():
 def main():
     global character_values
     global text_values
-    
+
     lines_file_path = os.path.join('lines', 'M01_TEXT', 'EN', 'lines.txt')
     speakers_file_path = os.path.join('lines', 'M01_TEXT', 'EN', 'speakers.txt')
 
