@@ -46,7 +46,7 @@ def setup_root_window():
 
     
  
-class TrackField():
+class FieldInput():
     '''This class sets the baseline characteristics 
     for the widgets, including font, font size, and colors
     '''
@@ -158,17 +158,17 @@ def main():
     #lines_input_prompt()
 
     # Create an instance of your class
-    sectionHeader = TrackField(root, "character_field","Character", character_values, False, 20)
+    sectionHeader = FieldInput(root, "character_field","Character", character_values, False, 20)
     sectionHeader.grid(row=0, column=0)
 
-    sectionHeader3 = TrackField(root, "mission_field","Mission", mission_values, False, 20)
+    sectionHeader3 = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
     sectionHeader3.grid(row=1, column=0)
 
     acestyle_values.append('?')
-    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+    sectionHeader4 = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
     sectionHeader4.grid(row=1, column=1)
 
-    sectionHeader2 = TrackField(root, "text_field","Text", text_values, False, 60)
+    sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
     sectionHeader2.grid(row=0, column=1)
 
     ####
