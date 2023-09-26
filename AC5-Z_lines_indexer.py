@@ -71,6 +71,7 @@ class FieldInput():
         self.frame1 = LabelFrame(
             parent,
             text=frame_text,
+            width=width,
             fg = self.varFG, 
             bg = self.varBG,
 
@@ -85,13 +86,13 @@ class FieldInput():
                 variable=self.acestyle_value,
                 value=value
                 )
-                self.entry.grid(row=0, column=index) # Put them side by side.
+                self.entry.grid(row=index, column=0) # Put them side by side.
             pass
         else: # Display options as autocomplete combo box
             pass
             self.entry = AutocompleteCombobox(
                 self.frame1,
-                width=width, 
+                #width=width, 
                 font=('Times', 14),
                 completevalues=std_values
                 )
@@ -99,7 +100,7 @@ class FieldInput():
     
          # Create a button to get the selected value
         self.get_value_button = ttk.Button(self.frame1, text="Get Value", command=self.get_combobox_value)
-        self.get_value_button.grid(row=1, column=0)
+        self.get_value_button.grid(row=6, column=0)
         #self.get_value_button.pack()
 
     # Allows you to grid as you would normally
@@ -138,9 +139,9 @@ class LineInputMenu():
 
         acestyle_values.append('?')
         acesty_field = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
-        acesty_field.grid(row=2, column=1)
+        acesty_field.grid(row=1, column=1)
 
-        txt_field = FieldInput(root, "text_field","Text", text_values, False, 60)
+        txt_field = FieldInput(root, "text_field","Text", text_values, False, 200)
         txt_field.grid(row=0, column=1)
         
         
