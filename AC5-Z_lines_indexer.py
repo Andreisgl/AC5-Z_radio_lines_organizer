@@ -130,6 +130,35 @@ class LineInputMenu():
         
 
 
+
+
+
+        # Create an instance of your class
+        sectionHeader = FieldInput(root, "character_field","Character", character_values, False, 20)
+        sectionHeader.grid(row=0, column=0)
+
+        sectionHeader3 = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
+        sectionHeader3.grid(row=1, column=0)
+
+        acestyle_values.append('?')
+        sectionHeader4 = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+        sectionHeader4.grid(row=1, column=1)
+
+        sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
+        sectionHeader2.grid(row=0, column=1)
+
+        ####
+
+        # Create a Tkinter variable to store the selected option
+        var = tk.StringVar()
+
+        # Create Radiobuttons
+        option1 = tk.Radiobutton(root, text="Option 1", variable=var, value="Option 1")
+        option2 = tk.Radiobutton(root, text="Option 2", variable=var, value="Option 2")
+        option3 = tk.Radiobutton(root, text="Option 3", variable=var, value="Option 3")
+        
+
+
 def lines_input_prompt():
     global root
     global INDEXING_CRITERIA
@@ -167,34 +196,34 @@ def main():
     setup_root_window()
     #lines_input_prompt()
 
-    # Create an instance of your class
-    sectionHeader = FieldInput(root, "character_field","Character", character_values, False, 20)
-    sectionHeader.grid(row=0, column=0)
+    while False:
 
-    sectionHeader3 = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
-    sectionHeader3.grid(row=1, column=0)
+        # Create an instance of your class
+        sectionHeader = FieldInput(root, "character_field","Character", character_values, False, 20)
+        sectionHeader.grid(row=0, column=0)
 
-    acestyle_values.append('?')
-    sectionHeader4 = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
-    sectionHeader4.grid(row=1, column=1)
+        sectionHeader3 = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
+        sectionHeader3.grid(row=1, column=0)
 
-    sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
-    sectionHeader2.grid(row=0, column=1)
+        acestyle_values.append('?')
+        sectionHeader4 = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+        sectionHeader4.grid(row=1, column=1)
 
-    ####
+        sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
+        sectionHeader2.grid(row=0, column=1)
 
-    # Create a Tkinter variable to store the selected option
-    var = tk.StringVar()
+        ####
 
-    # Create Radiobuttons
-    option1 = tk.Radiobutton(root, text="Option 1", variable=var, value="Option 1")
-    option2 = tk.Radiobutton(root, text="Option 2", variable=var, value="Option 2")
-    option3 = tk.Radiobutton(root, text="Option 3", variable=var, value="Option 3")
+        # Create a Tkinter variable to store the selected option
+        var = tk.StringVar()
 
-    ## Pack the Radiobuttons
-    #option1.pack()
-    #option2.pack()
-    #option3.pack()
+        # Create Radiobuttons
+        option1 = tk.Radiobutton(root, text="Option 1", variable=var, value="Option 1")
+        option2 = tk.Radiobutton(root, text="Option 2", variable=var, value="Option 2")
+        option3 = tk.Radiobutton(root, text="Option 3", variable=var, value="Option 3")
+    
+    linemenu = LineInputMenu(root, 'line_menu', 'Fields Input Menu', True, True, 100)
+
 
     root.mainloop()
 
