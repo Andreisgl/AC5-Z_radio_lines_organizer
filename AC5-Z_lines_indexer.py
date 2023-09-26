@@ -19,7 +19,7 @@ mission_values_acz = ('01', '02', '03', '04', '05',
 mission_values_ac5 = ('01','02', '03', '04', '05',
                       '06', '07', '08', '09', '10', '11A', '11B', '12A', '12B', '13', '14', '15', '16A', '16B', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27')
 mission_values = mission_values_acz # Choose wich game's values to use
-acestyle_values = ['MERCENARY', 'SOLDIER', 'KNIGHT']
+acestyle_values = ['MERCENARY', 'SOLDIER', 'KNIGHT', 'NONE']
 
 #endregion
 
@@ -29,6 +29,7 @@ import tkinter as tk
 from tkinter import *
 import tkinter.ttk as ttk
 from ttkwidgets.autocomplete import *
+from tkinter.messagebox import showinfo
 
 
 def setup_root_window():
@@ -49,7 +50,9 @@ class TrackField():
     '''This class sets the baseline characteristics 
     for the widgets, including font, font size, and colors
     '''
-
+    # Output vars
+    #acestyle_value = ''
+    
     # Attributes
     varFont = "Calibri"
     fontSize = 14
@@ -62,6 +65,9 @@ class TrackField():
         self.name = name
         self.frame_text = frame_text
         
+        self.sisradio = isradio # Just so I can access "isradio"
+        self.acestyle_value = tk.StringVar()
+
         self.frame1 = LabelFrame(
             parent,
             text=frame_text,
@@ -71,16 +77,15 @@ class TrackField():
         )
         
         if isradio: # If radio button option was chosen
-            control_var = tk.StringVar()
-            #value = 'aaa'
+            
             for index, value in enumerate(std_values):
                 self.entry = ttk.Radiobutton(
                 self.frame1,
-                    text=value,
-                variable=control_var,
+                text=value,
+                variable=self.acestyle_value,
                 value=value
                 )
-                self.entry.grid(row=index, column=0)
+                self.entry.grid(row=0, column=index) # Put them side by side.
             pass
         else: # Display options as autocomplete combo box
             pass
@@ -91,6 +96,11 @@ class TrackField():
                 completevalues=std_values
                 )
             self.entry.grid(row=0, column=0)
+    
+         # Create a button to get the selected value
+        self.get_value_button = ttk.Button(self.frame1, text="Get Value", command=self.get_combobox_value)
+        self.get_value_button.grid(row=1, column=0)
+        #self.get_value_button.pack()
 
     # Allows you to grid as you would normally
     # Can subsitute pack() here or have both class methods
@@ -98,6 +108,15 @@ class TrackField():
         self.frame1.grid(kwargs)
         #self.label.grid(kwargs)
         #self.entry.grid(kwargs)
+
+    def get_combobox_value(self):
+        selected_value = ''
+        if self.sisradio:
+            selected_value = self.acestyle_value.get()
+        else:
+            selected_value = self.entry.get()
+        print(f"Selected value: {selected_value}")
+        
 
 
 
@@ -145,10 +164,11 @@ def main():
     sectionHeader3 = TrackField(root, "mission_field","Mission", mission_values, False, 20)
     sectionHeader3.grid(row=1, column=0)
 
-    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", acestyle_values, True, 20)
-    sectionHeader4.grid(row=2, column=0)
+    acestyle_values.append('?')
+    sectionHeader4 = TrackField(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+    sectionHeader4.grid(row=1, column=1)
 
-    sectionHeader2 = TrackField(root, "text_field","Text", text_values, False, 20)
+    sectionHeader2 = TrackField(root, "text_field","Text", text_values, False, 60)
     sectionHeader2.grid(row=0, column=1)
 
     ####
