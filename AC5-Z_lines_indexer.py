@@ -9,10 +9,8 @@ INDEXING_CRITERIA = ('CHARACTER',
                      )
 
 
-character_values = ['Pixy', 'AWACS', 'PJ']
-text_values = ["Galm 2 to Galm 1. I'll leave the orders to you. give us a good show",
-                                "Yo buddy, still alive?",
-                                "Galm 1 was shot down!"]
+character_values = [] #['Pixy', 'AWACS', 'PJ']
+text_values = [] #["Galm 2 to Galm 1. I'll leave the orders to you. give us a good show", "Yo buddy, still alive?", "Galm 1 was shot down!"]
 # Mission values for both games
 mission_values_acz = ('01', '02', '03', '04', '05',
                       '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27')
@@ -24,6 +22,7 @@ acestyle_values = ['MERCENARY', 'SOLDIER', 'KNIGHT', 'NONE']
 #endregion
 
 
+import os
 
 import tkinter as tk
 from tkinter import *
@@ -181,6 +180,26 @@ def lines_input_prompt():
     #entry2.pack()
 
 def main():
+    global character_values
+    global text_values
+    
+    lines_file_path = os.path.join('lines', 'M01_TEXT', 'EN', 'lines.txt')
+    speakers_file_path = os.path.join('lines', 'M01_TEXT', 'EN', 'speakers.txt')
+
+    with open(lines_file_path, 'rb') as file:
+        data = file.read().decode('utf-8')
+        data = data.replace('|', ' ')
+        data = data.splitlines()
+        text_values = data
+    
+    with open(speakers_file_path, 'rb') as file:
+        data = file.read().decode('utf-8')
+        data = data.replace('|', ' ')
+        data = data.splitlines()
+        character_values = data
+
+
+
     setup_root_window()
     #lines_input_prompt()
 
