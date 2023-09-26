@@ -115,9 +115,19 @@ class FieldInput():
             selected_value = self.acestyle_value.get()
         else:
             selected_value = self.entry.get()
-        print(f"Selected value: {selected_value}")
         
-
+        print(f"Selected value: {selected_value}")
+        return selected_value
+        
+class LineInputMenu():
+    def __init__(self, parent, name, frame_text, isACZ, isRadio, width):
+        self.parent  = parent
+        self.name = name
+        self.frame_text = frame_text
+        
+        self.sisACZ = isACZ # If True, use values for ACZ. Else, use AC5
+        self.sisRadio = isRadio # If True, tracks are RADIO lines.
+        
 
 
 def lines_input_prompt():
