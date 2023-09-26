@@ -37,8 +37,8 @@ def setup_root_window():
     root = tk.Tk()
     root.title('AC5-Z_RADIO_LINES_ORGANIZER')
 
-    window_width = 400
-    window_heigth = 300
+    window_width = 800
+    window_heigth = 400
 
     root.geometry(f'{window_width}x{window_heigth}')
 
