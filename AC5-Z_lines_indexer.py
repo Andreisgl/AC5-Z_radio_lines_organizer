@@ -130,18 +130,18 @@ class LineInputMenu():
 
 
         # Create an instance of your class
-        sectionHeader = FieldInput(root, "character_field","Character", character_values, False, 20)
-        sectionHeader.grid(row=0, column=0)
+        char_field = FieldInput(root, "character_field","Character", character_values, False, 20)
+        char_field.grid(row=0, column=0)
 
-        sectionHeader3 = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
-        sectionHeader3.grid(row=1, column=0)
+        miss_field = FieldInput(root, "mission_field","Mission", mission_values, False, 20)
+        miss_field.grid(row=1, column=0)
 
         acestyle_values.append('?')
-        sectionHeader4 = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
-        sectionHeader4.grid(row=1, column=1)
+        acesty_field = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
+        acesty_field.grid(row=1, column=1)
 
-        sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
-        sectionHeader2.grid(row=0, column=1)
+        txt_field = FieldInput(root, "text_field","Text", text_values, False, 60)
+        txt_field.grid(row=0, column=1)
         
         
 
