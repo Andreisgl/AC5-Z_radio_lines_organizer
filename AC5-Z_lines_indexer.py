@@ -138,7 +138,7 @@ class LineInputMenu():
 
         acestyle_values.append('?')
         acesty_field = FieldInput(root, "acestyle_field","Ace Style", acestyle_values, True, 60)
-        acesty_field.grid(row=1, column=1)
+        acesty_field.grid(row=2, column=1)
 
         txt_field = FieldInput(root, "text_field","Text", text_values, False, 60)
         txt_field.grid(row=0, column=1)
