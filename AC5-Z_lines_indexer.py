@@ -127,10 +127,6 @@ class LineInputMenu():
         
         self.sisACZ = isACZ # If True, use values for ACZ. Else, use AC5
         self.sisRadio = isRadio # If True, tracks are RADIO lines.
-        
-
-
-
 
 
         # Create an instance of your class
@@ -146,16 +142,7 @@ class LineInputMenu():
 
         sectionHeader2 = FieldInput(root, "text_field","Text", text_values, False, 60)
         sectionHeader2.grid(row=0, column=1)
-
-        ####
-
-        # Create a Tkinter variable to store the selected option
-        var = tk.StringVar()
-
-        # Create Radiobuttons
-        option1 = tk.Radiobutton(root, text="Option 1", variable=var, value="Option 1")
-        option2 = tk.Radiobutton(root, text="Option 2", variable=var, value="Option 2")
-        option3 = tk.Radiobutton(root, text="Option 3", variable=var, value="Option 3")
+        
         
 
 
