@@ -96,10 +96,6 @@ class FieldInput():
                 completevalues=std_values
                 )
             self.entry.grid(row=0, column=0)
-    
-        # Create a button to get the selected value
-        self.get_value_button = ttk.Button(self.frame1, text="Get Value", command=self.get_combobox_value)
-        self.get_value_button.grid(row=6, column=0)
 
     # Allows you to grid as you would normally
     # Can subsitute pack() here or have both class methods
@@ -112,8 +108,7 @@ class FieldInput():
             selected_value = self.acestyle_value.get()
         else:
             selected_value = self.entry.get()
-        
-        print(f"Selected value: {selected_value}")
+            
         return selected_value
         
 class LineInputMenu():
