@@ -7,9 +7,7 @@ import os
 import csv
 import subprocess
 
-def main():
-    check_paths()
-
+# BASIC PATH AND PROJECT PREPARING
 def check_paths():
     # Make sure important paths and dirs are created
 
@@ -61,7 +59,6 @@ def check_paths():
         os.mkdir(LINES_FOLDER_PATH)
 
     #endregion
-
 def choose_project():
     # Prompt user to choose which project to open/create
     # For now, name is hard-coded.
@@ -78,6 +75,10 @@ def choose_project():
     print('Opening "{}".'.format(chosen_project))
 
     return chosen_project
+
+
+def main():
+    check_paths()
 
 INPUT_EXIT_MESSAGE = 'PRESS ENTER TO EXIT'
 INPUT_CONTINUE_MESSAGE = 'PRESS ENTER TO CONTINUE'
