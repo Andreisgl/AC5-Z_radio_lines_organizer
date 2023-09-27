@@ -4,8 +4,10 @@
 # will be saved to a .csv file for indexing.
 
 import os
-import csv
-import subprocess
+#import csv
+#import subprocess
+
+import tkinter as tk
 
 # BASIC PATH AND PROJECT PREPARING
 def check_paths():
@@ -76,9 +78,24 @@ def choose_project():
 
     return chosen_project
 
+# TKINTER SETUP
+def setup_root_window():
+    global root
+    root = tk.Tk()
+    root.title('AC5-Z_RADIO_LINES_ORGANIZER')
+
+    window_width = 800
+    window_heigth = 400
+
+    root.geometry(f'{window_width}x{window_heigth}')
+
+    root.config(bg='#ffffff')
 
 def main():
     check_paths()
+    setup_root_window()
+
+    root.mainloop()
 
 INPUT_EXIT_MESSAGE = 'PRESS ENTER TO EXIT'
 INPUT_CONTINUE_MESSAGE = 'PRESS ENTER TO CONTINUE'
