@@ -72,5 +72,35 @@ class ProjectMetaPromptFrame():
 
 
 
+class ChooseProjectPrompt():
+    def __init__(self, parent, name, frame_text, project_list):
+        self.parent  = parent
+        self.name = name
+        
+        popup = Toplevel()
+        popup.attributes("-topmost", True)
 
+        frame1 = LabelFrame(
+            popup,
+            text=frame_text,
+        )
+        self.frame1 = frame1
+
+        
+
+        # Create GUI for project choosing
+        current_var = tk.StringVar()
+        project = ttk.Combobox(
+            frame1,
+            #container=self.frame1,
+            #values=project_list,
+            textvariable=current_var
+        )
+        project.pack(anchor=W)
+        project['values'] = project_list
+
+    
+    # Apply grid() functionality to this class
+    def grid(self, **kwargs):
+        self.frame1.grid(kwargs)
 

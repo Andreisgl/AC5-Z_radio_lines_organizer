@@ -115,7 +115,17 @@ def choose_project():
 
 
     print('Choose which project to open/create:')
+
+
+
+
+    project_menu = GUItems.ChooseProjectPrompt(root, 'choose_project', 'Choose Project', projects_list)
+    project_menu.grid(row=0, column=0)
     
+
+
+
+
     print('By the Power of hardcoding, I choose the project for you!')
     #chosen_project = projects_list[prompt_user_list(projects_list, True)]
     chosen_project = 'test_project'
