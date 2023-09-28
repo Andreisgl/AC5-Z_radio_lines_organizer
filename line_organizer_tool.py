@@ -100,8 +100,13 @@ def choose_project():
     projects_list = os.listdir(PROJECTS_DB_PATH)
 
     # Create GUI for project choosing
-    input = GUItems.PopupPromptChoose(root, 'project_prompt', 'Project stuff!', ('foo', 'bar'))
-    input.grid(row=0, column=0)    
+    #input = GUItems.ComboboxFrame(root, 'project_prompt', 'Project stuff!', ('foo', 'bar'))
+    #input.grid(row=0, column=0)
+
+    choose_menu = GUItems.ProjectMetaPrompt(root, 'choose_menu', 'Project metadata', ('foo', 'bar'))
+    choose_menu.grid(row=0, column=0)
+    
+
 
 
     print('Choose which project to open/create:')
