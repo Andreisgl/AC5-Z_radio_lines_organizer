@@ -29,13 +29,14 @@ class ComboboxFrame():
         self.value = tk.StringVar()
 
         for index, value in enumerate(fields):
-            self.entry = ttk.Radiobutton(
+            entry = ttk.Radiobutton(
             self.frame1,
             text=value,
             variable=self.value,
             value=value
             )
-            self.entry.grid(row=index, column=0) # Put them side by side.
+            #entry.grid(row=index, column=0) # Put them side by side.
+            entry.pack(anchor=tk.W)
     
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
