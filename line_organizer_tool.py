@@ -9,6 +9,9 @@ import os
 
 import tkinter as tk
 
+
+from modules import tkinter_classes as GUItems
+
 # BASIC PATH AND PROJECT PREPARING
 def check_paths():
     # Make sure important paths and dirs are created
@@ -51,8 +54,6 @@ def check_paths():
     # Flag stuff
     project_is_new = False
 
-    
-
     # Create folders and files if they don't exist
     if not os.path.exists(PROJECT_PATH): # Project's root folder
         os.mkdir(PROJECT_PATH)
@@ -67,9 +68,21 @@ def check_paths():
 
 def prepare_meta_file():
     # Track info stuff
+
+    # What data do I need to store?
+    # If tracks are BGM or RADIO
+    # What game they belong to
+    # 
+
+    global PROJECT_META_FILE_PATH
+
     global TRACKS_ARE_BGM
     TRACK_TYPE_HEADER = 'TRACK_TYPE:'
     TRACK_TYPE_OPTIONS = ('BGM', 'RADIO')
+
+    global CURRENT_GAME
+    GAME_TYPE_HEADER = 'GAME:'
+    GAME_TYPE_OPTIONS = ('ACZ',)
 
 
     print('meta file is new!')
@@ -81,9 +94,15 @@ def prepare_meta_file():
 def choose_project():
     # Prompt user to choose which project to open/create
     # For now, name is hard-coded.
+    global root
     global PROJECTS_DB_PATH
 
     projects_list = os.listdir(PROJECTS_DB_PATH)
+
+    # Create GUI for project choosing
+    input = GUItems.PopupPromptChoose(root, 'project_prompt', 'Project stuff!', ('foo', 'bar'))
+    input.grid(row=0, column=0)    
+
 
     print('Choose which project to open/create:')
     
@@ -109,8 +128,9 @@ def setup_root_window():
     root.config(bg='#ffffff')
 
 def main():
-    check_paths()
     setup_root_window()
+    check_paths()
+    
 
     root.mainloop()
 
