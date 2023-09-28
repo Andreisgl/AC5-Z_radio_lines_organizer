@@ -1,7 +1,7 @@
 # This file contains classes for the tkinter menus and custom widgets
 
 import tkinter as tk
-#from tkinter import *
+from tkinter import *
 import tkinter.ttk as ttk
 from tkinter.ttk import *
 from ttkwidgets.autocomplete import *
@@ -54,17 +54,23 @@ class ProjectMetaPromptFrame():
             text=frame_text,
         )
 
+        popup = Toplevel()
+        popup.attributes("-topmost", True)
+
         # Create GUI for project metadata if project is new
-        game = RadioboxFrame(self.frame1, 'game_frame', fields[0][0], fields[0][1])
+        game = RadioboxFrame(popup, 'game_frame', fields[0][0], fields[0][1])
         game.grid(row=0, column=0)
 
         # Create GUI for project choosing
-        track_type = RadioboxFrame(self.frame1, 'track_frame', fields[1][0], fields[1][1])
+        track_type = RadioboxFrame(popup, 'track_frame', fields[1][0], fields[1][1])
         track_type.grid(row=0, column=1)
     
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
+
+
+
 
 
 
