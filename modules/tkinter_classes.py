@@ -49,14 +49,9 @@ class ProjectMetaPromptFrame():
         self.parent  = parent
         self.name = name
         
-        #self.fields = fields # DO I NEED THIS??????????????????????
-        
         self.frame1 = LabelFrame(
             parent,
             text=frame_text,
-            #width=60,
-            #fg = '#AAAAAA',
-            #bg = '#AAAAAA'
         )
 
         # Create GUI for project metadata if project is new
@@ -70,3 +65,6 @@ class ProjectMetaPromptFrame():
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
+
+
+
