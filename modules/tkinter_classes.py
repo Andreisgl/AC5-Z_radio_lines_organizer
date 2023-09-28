@@ -7,7 +7,7 @@ from tkinter.ttk import *
 from ttkwidgets.autocomplete import *
 #from tkinter.messagebox import showinfo
 
-class ComboboxFrame():
+class RadioboxFrame():
     # This widget prompts the user to input data from a tuple of fields.
     # Fields must be formatted as such:
     # (option1, option2)
@@ -42,14 +42,14 @@ class ComboboxFrame():
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
 
-class ProjectMetaPrompt():
+class ProjectMetaPromptFrame():
     # Options must be formatted as such:
     # ( (field1, (option1, option2)), (field2, (option1, option2)) )
     def __init__(self, parent, name, frame_text, fields):
         self.parent  = parent
         self.name = name
         
-        self.fields = fields # DO I NEED THIS??????????????????????
+        #self.fields = fields # DO I NEED THIS??????????????????????
         
         self.frame1 = LabelFrame(
             parent,
@@ -60,11 +60,11 @@ class ProjectMetaPrompt():
         )
 
         # Create GUI for project metadata if project is new
-        game = ComboboxFrame(self.frame1, 'game_frame', 'Choose the game', ('AC5', 'ACZ'))
+        game = RadioboxFrame(self.frame1, 'game_frame', fields[0][0], fields[0][1])
         game.grid(row=0, column=0)
 
         # Create GUI for project choosing
-        track_type = ComboboxFrame(self.frame1, 'track_frame', 'What type of audio tracks?', ('BGM', 'RADIO'))
+        track_type = RadioboxFrame(self.frame1, 'track_frame', fields[1][0], fields[1][1])
         track_type.grid(row=0, column=1)
     
     # Apply grid() functionality to this class

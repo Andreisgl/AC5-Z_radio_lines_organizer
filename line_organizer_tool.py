@@ -103,7 +103,9 @@ def choose_project():
     #input = GUItems.RadioboxFrame(root, 'project_prompt', 'Project stuff!', ('foo', 'bar'))
     #input.grid(row=0, column=0)
 
-    choose_menu = GUItems.ProjectMetaPrompt(root, 'choose_menu', 'Project metadata', ('foo', 'bar'))
+    meta_prompt_fields = ( ('GAME', ('AC5', 'ACZ')), ('TRACK TYPE', ('BGM', 'RADIO')) )
+
+    choose_menu = GUItems.ProjectMetaPromptFrame(root, 'choose_menu', 'Project metadata', meta_prompt_fields)
     choose_menu.grid(row=0, column=0)
     
 
