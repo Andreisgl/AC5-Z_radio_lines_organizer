@@ -168,8 +168,7 @@ def main():
     print('END!')
     root.mainloop()
 
-INPUT_EXIT_MESSAGE = 'PRESS ENTER TO EXIT'
-INPUT_CONTINUE_MESSAGE = 'PRESS ENTER TO CONTINUE'
+
 
 if __name__ == "__main__":
     main()
