@@ -8,7 +8,10 @@ import os
 #import subprocess
 
 import tkinter as tk
+from tkinter import *
+from tkinter import messagebox
 import tkinter.ttk as ttk
+from tkinter.ttk import *
 
 from modules import tkinter_classes as GUItems
 
@@ -30,8 +33,14 @@ def check_paths():
         os.mkdir(PROJECTS_DB_PATH)
     #endregion
 
+def open_project(chosen_project):
+    # Assemble important paths and folders for the project.s
+    # Receives project name and opens it.
+    # If project does not exist, create it
+    
+
     # PROMPT USER TO CHOOSE PROJECT
-    chosen_project = choose_project()
+    #chosen_project = choose_project()
 
     #region # Intra-project paths
     # Project specific folder
@@ -103,45 +112,41 @@ def choose_project():
     global root
     global PROJECTS_DB_PATH
 
+    global SCREEN_WIDTH 
+    global SCREEN_HEIGHT
+
+    chosen_project = ''
     projects_list = os.listdir(PROJECTS_DB_PATH)
-
-    # Create GUI for project choosing
-    #input = GUItems.RadioboxFrame(root, 'project_prompt', 'Project stuff!', ('foo', 'bar'))
-    #input.grid(row=0, column=0)
-
-    
-    def get_project():
-        print('weeoo!')
-        print(project_menu.get_value())
-        return
-
-
 
     print('Choose which project to open/create:')
 
 
+    popup = Toplevel()
+    popup.attributes("-topmost", True)
+    GUItems.center_window(popup)
 
+    project_menu = GUItems.ChooseProjectFrame(popup, 'choose_project', 'Choose Project', projects_list, '')
+    project_menu.pack()
 
-    project_menu = GUItems.ChooseProjectPrompt(root, 'choose_project', 'Choose Project', projects_list, '')
-    project_menu.grid(row=0, column=0),
-
-    # Create a button to get the selected value
-    get_project_button = ttk.Button(root, text="Get Value", command=get_project)
-    #self.get_value_button.grid(row=6, column=0)
+    # Create a button to get the selected project
+    def get_project():
+        chosen_project = project_menu.get_value()
+        if chosen_project == '':
+            messagebox.showwarning("Warning", "No project was selected!")
+            return
+        print('Project selected! YAY!')
+    
+    get_project_button = ttk.Button(popup, text="Get Value", command=get_project)
     get_project_button.pack()
     
 
-    
+    #while chosen_project == '': # Wait
+    #    pass
 
 
+    #print('Opening "{}".'.format(chosen_project))
 
-    print('By the Power of hardcoding, I choose the project for you!')
-    #chosen_project = projects_list[prompt_user_list(projects_list, True)]
-    chosen_project = 'test_project'
-
-    print('Opening "{}".'.format(chosen_project))
-
-    return chosen_project
+    #return chosen_project
 
     
 # TKINTER SETUP
@@ -150,18 +155,19 @@ def setup_root_window():
     root = tk.Tk()
     root.title('AC5-Z_RADIO_LINES_ORGANIZER')
 
-    window_width = 800
-    window_heigth = 400
+    GUItems.center_window(root, False)
 
-    root.geometry(f'{window_width}x{window_heigth}')
+    
 
     root.config(bg='#ffffff')
 
 def main():
     setup_root_window()
     check_paths()
+    choose_project()
+    #open_project()
     
-
+    print('END!')
     root.mainloop()
 
 INPUT_EXIT_MESSAGE = 'PRESS ENTER TO EXIT'
