@@ -24,7 +24,6 @@ def check_paths():
     global SCRIPT_DIR_PATH # This script's dir
     global PROJECTS_DB_PATH # Where all projects will be contained
 
-    
     SCRIPT_PATH = __file__
     SCRIPT_DIR_PATH = os.path.dirname(SCRIPT_PATH)
     PROJECTS_DB_PATH = os.path.join(SCRIPT_DIR_PATH, 'PROJECTS')
@@ -37,10 +36,6 @@ def open_project(chosen_project):
     # Assemble important paths and folders for the project.
     # Receives project name and opens it.
     # If project does not exist, create it
-    
-
-    # PROMPT USER TO CHOOSE PROJECT
-    #chosen_project = choose_project()
 
     #region # Intra-project paths
     # Project specific folder
@@ -99,17 +94,11 @@ def prepare_meta_file():
 
     meta_prompt_fields = ( ('GAME', ('AC5', 'ACZ')), ('TRACK TYPE', ('BGM', 'RADIO')) )
     
-    
-    
-
-
-
+    # Initiate metadata GUI
     meta_popup = Toplevel()
     meta_popup.attributes("-topmost", True)
-    
 
     choose_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_menu', 'Project metadata', meta_prompt_fields)
-    #choose_menu.pack()
 
     # Create a button to get the selected project
     def get_metadata():
@@ -117,6 +106,7 @@ def prepare_meta_file():
         if chosen_meta == '':
             messagebox.showwarning("Warning", "No project was selected!")
             return
+        meta_popup.destroy()
         print('Metadata chosen:', chosen_meta)
         
     get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
@@ -169,15 +159,11 @@ def setup_root_window():
 
     GUItems.center_window(root, False)
 
-    
 
-    root.config(bg='#ffffff')
-
-def main():
-    setup_root_window()
+def main(): 
     check_paths()
+    setup_root_window()
     choose_project()
-    #open_project()
     
     print('END!')
     root.mainloop()

@@ -98,7 +98,7 @@ class ProjectMetaPromptFrame():
     def get_value(self):
         results = []
         for field in self.field_widgets:
-            results.append(field.get_valueW())
+            results.append(field.get_value())
         print(results)
         return results
     
