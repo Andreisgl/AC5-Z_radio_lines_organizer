@@ -110,7 +110,10 @@ def choose_project():
     #input.grid(row=0, column=0)
 
     
-    
+    def get_project():
+        print('weeoo!')
+        print(project_menu.get_value())
+        return
 
 
 
@@ -123,11 +126,12 @@ def choose_project():
     project_menu.grid(row=0, column=0),
 
     # Create a button to get the selected value
-    get_project_button = ttk.Button(root, text="Get Value")
+    get_project_button = ttk.Button(root, text="Get Value", command=get_project)
     #self.get_value_button.grid(row=6, column=0)
     get_project_button.pack()
     
 
+    
 
 
 
@@ -139,6 +143,7 @@ def choose_project():
 
     return chosen_project
 
+    
 # TKINTER SETUP
 def setup_root_window():
     global root

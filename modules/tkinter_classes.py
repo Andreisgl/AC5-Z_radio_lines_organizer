@@ -42,7 +42,7 @@ class RadioboxFrame():
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
 
-class ProjectMetaPromptFrame(Toplevel):
+class ProjectMetaPromptFrame():
     # Options must be formatted as such:
     # ( (field1, (option1, option2)), (field2, (option1, option2)) )
     def __init__(self, parent, name, frame_text, fields):
@@ -111,5 +111,6 @@ class ChooseProjectPrompt():
     def get_value(self):
         project_choice = self.project_var.get()
         
-        print(project_choice)
+        #print(project_choice)
+        return project_choice
 
