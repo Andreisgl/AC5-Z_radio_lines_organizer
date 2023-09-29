@@ -61,6 +61,8 @@ class RadioboxFrame():
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
+    def pack(self, **kwargs):
+        self.frame1.pack(**kwargs)
 
 class ProjectMetaPromptFrame():
     # Options must be formatted as such:
@@ -74,21 +76,27 @@ class ProjectMetaPromptFrame():
             text=frame_text,
         )
 
-        popup = Toplevel()
-        popup.attributes("-topmost", True)
+        #popup = Toplevel()
+        #popup.attributes("-topmost", True)
 
         # Create GUI for project metadata if project is new
-        game = RadioboxFrame(popup, 'game_frame', fields[0][0], fields[0][1])
-        game.grid(row=0, column=0)
+        game = RadioboxFrame(parent, 'game_frame', fields[0][0], fields[0][1])
+        game.pack()
 
         # Create GUI for project choosing
-        track_type = RadioboxFrame(popup, 'track_frame', fields[1][0], fields[1][1])
-        track_type.grid(row=0, column=1)
+        track_type = RadioboxFrame(parent, 'track_frame', fields[1][0], fields[1][1])
+        track_type.pack()
     
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
-
+    def pack(self, **kwargs):
+        self.frame1.pack(**kwargs)
+    
+    def get_value(self):
+        project_choice = self.project_var.get()
+        return project_choice
+    
 class ChooseProjectFrame():
     def __init__(self, parent, name, frame_text, project_list, action):
         self.parent  = parent
@@ -122,7 +130,5 @@ class ChooseProjectFrame():
     
     def get_value(self):
         project_choice = self.project_var.get()
-        
-        #print(project_choice)
         return project_choice
 

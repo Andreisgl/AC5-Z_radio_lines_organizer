@@ -98,12 +98,30 @@ def prepare_meta_file():
     print('PROMPT USER ABOUT FILE METADATA')
 
     meta_prompt_fields = ( ('GAME', ('AC5', 'ACZ')), ('TRACK TYPE', ('BGM', 'RADIO')) )
-    choose_menu = GUItems.ProjectMetaPromptFrame(root, 'choose_menu', 'Project metadata', meta_prompt_fields)
-    #choose_menu.grid(row=0, column=0)
-
     
-    #with open(PROJECT_META_FILE_PATH, 'wb'):
-    #        pass
+    
+    
+
+
+
+    meta_popup = Toplevel()
+    meta_popup.attributes("-topmost", True)
+    
+
+    choose_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_menu', 'Project metadata', meta_prompt_fields)
+    #choose_menu.pack()
+
+    # Create a button to get the selected project
+    def get_metadata():
+        chosen_meta = choose_menu.get_value()
+        if chosen_meta == '':
+            messagebox.showwarning("Warning", "No project was selected!")
+            return
+        print('Metadata chosen:', chosen_meta)
+        
+    get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
+    get_metadata_button.pack()
+    GUItems.center_window(meta_popup, True)
 
 
 def choose_project():
@@ -123,7 +141,7 @@ def choose_project():
 
     popup = Toplevel()
     popup.attributes("-topmost", True)
-    GUItems.center_window(popup)
+    
 
     project_menu = GUItems.ChooseProjectFrame(popup, 'choose_project', 'Choose Project', projects_list, '')
     project_menu.pack()
@@ -134,11 +152,12 @@ def choose_project():
         if chosen_project == '':
             messagebox.showwarning("Warning", "No project was selected!")
             return
+        print('Project selected:', chosen_project)
         open_project(chosen_project)
-        print('Project selected! YAY!')
-    
-    get_project_button = ttk.Button(popup, text="Get Value", command=get_project)
+        
+    get_project_button = ttk.Button(popup, text="Choose Project", command=get_project)
     get_project_button.pack()
+    GUItems.center_window(popup, True)
 
     
 # TKINTER SETUP
