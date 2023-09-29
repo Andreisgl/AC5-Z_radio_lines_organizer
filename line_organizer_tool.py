@@ -34,7 +34,7 @@ def check_paths():
     #endregion
 
 def open_project(chosen_project):
-    # Assemble important paths and folders for the project.s
+    # Assemble important paths and folders for the project.
     # Receives project name and opens it.
     # If project does not exist, create it
     
@@ -134,19 +134,11 @@ def choose_project():
         if chosen_project == '':
             messagebox.showwarning("Warning", "No project was selected!")
             return
+        open_project(chosen_project)
         print('Project selected! YAY!')
     
     get_project_button = ttk.Button(popup, text="Get Value", command=get_project)
     get_project_button.pack()
-    
-
-    #while chosen_project == '': # Wait
-    #    pass
-
-
-    #print('Opening "{}".'.format(chosen_project))
-
-    #return chosen_project
 
     
 # TKINTER SETUP

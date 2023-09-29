@@ -99,22 +99,16 @@ class ChooseProjectFrame():
         self.frame1 = LabelFrame(
             parent,
             text=frame_text,
-        )
-        #self.frame1 = frame1        
+        )   
 
         # Create GUI for project choosing
         self.project_var = tk.StringVar()
-        self.project_prompt = ttk.Menubutton(
+        self.project_prompt = ttk.Combobox(
             self.frame1,
+            values = project_list,
             textvariable=self.project_var
         )
-        menu = tk.Menu(self.project_prompt, tearoff=False)        
-        for project in project_list:
-            menu.add_radiobutton(
-                label=project,
-                value=project,
-                variable=self.project_var)
-        self.project_prompt['menu'] = menu
+
         self.project_prompt.pack()
 
         
