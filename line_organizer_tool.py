@@ -15,6 +15,16 @@ from tkinter.ttk import *
 
 from modules import tkinter_classes as GUItems
 
+
+# TKINTER SETUP
+def setup_root_window():
+    global root
+    root = tk.Tk()
+    root.title('AC5-Z_RADIO_LINES_ORGANIZER')
+
+    GUItems.center_window(root, False)
+
+
 # BASIC PATH AND PROJECT PREPARING
 def check_paths():
     # Make sure important paths and dirs are created
@@ -31,6 +41,42 @@ def check_paths():
     if not os.path.exists(PROJECTS_DB_PATH):
         os.mkdir(PROJECTS_DB_PATH)
     #endregion
+
+def choose_project():
+    # Prompt user to choose which project to open/create
+    # For now, name is hard-coded.
+    global root
+    global PROJECTS_DB_PATH
+
+    global SCREEN_WIDTH 
+    global SCREEN_HEIGHT
+
+    chosen_project = ''
+    projects_list = os.listdir(PROJECTS_DB_PATH)
+
+    print('Choose which project to open/create:')
+
+
+    project_popup = Toplevel()
+    project_popup.attributes("-topmost", True)
+    
+
+    project_menu = GUItems.ChooseProjectFrame(project_popup, 'choose_project', 'Choose Project', projects_list, '')
+    project_menu.pack()
+
+    # Create a button to get the selected project
+    def get_project():
+        chosen_project = project_menu.get_value()
+        if chosen_project == '':
+            messagebox.showwarning("Warning", "No project was selected!")
+            return
+        print('Project selected:', chosen_project)
+        project_popup.destroy()
+        open_project(chosen_project)
+        
+    get_project_button = ttk.Button(project_popup, text="Choose Project", command=get_project)
+    get_project_button.pack()
+    GUItems.center_window(project_popup, True)
 
 def open_project(chosen_project):
     # Assemble important paths and folders for the project.
@@ -112,52 +158,6 @@ def prepare_meta_file():
     get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
     get_metadata_button.pack()
     GUItems.center_window(meta_popup, True)
-
-
-def choose_project():
-    # Prompt user to choose which project to open/create
-    # For now, name is hard-coded.
-    global root
-    global PROJECTS_DB_PATH
-
-    global SCREEN_WIDTH 
-    global SCREEN_HEIGHT
-
-    chosen_project = ''
-    projects_list = os.listdir(PROJECTS_DB_PATH)
-
-    print('Choose which project to open/create:')
-
-
-    project_popup = Toplevel()
-    project_popup.attributes("-topmost", True)
-    
-
-    project_menu = GUItems.ChooseProjectFrame(project_popup, 'choose_project', 'Choose Project', projects_list, '')
-    project_menu.pack()
-
-    # Create a button to get the selected project
-    def get_project():
-        chosen_project = project_menu.get_value()
-        if chosen_project == '':
-            messagebox.showwarning("Warning", "No project was selected!")
-            return
-        print('Project selected:', chosen_project)
-        project_popup.destroy()
-        open_project(chosen_project)
-        
-    get_project_button = ttk.Button(project_popup, text="Choose Project", command=get_project)
-    get_project_button.pack()
-    GUItems.center_window(project_popup, True)
-
-    
-# TKINTER SETUP
-def setup_root_window():
-    global root
-    root = tk.Tk()
-    root.title('AC5-Z_RADIO_LINES_ORGANIZER')
-
-    GUItems.center_window(root, False)
 
 
 def main(): 
