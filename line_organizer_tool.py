@@ -8,7 +8,7 @@ import os
 #import subprocess
 
 import tkinter as tk
-
+import tkinter.ttk as ttk
 
 from modules import tkinter_classes as GUItems
 
@@ -90,7 +90,7 @@ def prepare_meta_file():
 
     meta_prompt_fields = ( ('GAME', ('AC5', 'ACZ')), ('TRACK TYPE', ('BGM', 'RADIO')) )
     choose_menu = GUItems.ProjectMetaPromptFrame(root, 'choose_menu', 'Project metadata', meta_prompt_fields)
-    choose_menu.grid(row=0, column=0)
+    #choose_menu.grid(row=0, column=0)
 
     
     #with open(PROJECT_META_FILE_PATH, 'wb'):
@@ -119,8 +119,13 @@ def choose_project():
 
 
 
-    project_menu = GUItems.ChooseProjectPrompt(root, 'choose_project', 'Choose Project', projects_list)
-    project_menu.grid(row=0, column=0)
+    project_menu = GUItems.ChooseProjectPrompt(root, 'choose_project', 'Choose Project', projects_list, '')
+    project_menu.grid(row=0, column=0),
+
+    # Create a button to get the selected value
+    get_project_button = ttk.Button(root, text="Get Value")
+    #self.get_value_button.grid(row=6, column=0)
+    get_project_button.pack()
     
 
 

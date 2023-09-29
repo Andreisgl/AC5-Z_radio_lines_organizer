@@ -42,7 +42,7 @@ class RadioboxFrame():
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
 
-class ProjectMetaPromptFrame():
+class ProjectMetaPromptFrame(Toplevel):
     # Options must be formatted as such:
     # ( (field1, (option1, option2)), (field2, (option1, option2)) )
     def __init__(self, parent, name, frame_text, fields):
@@ -73,34 +73,43 @@ class ProjectMetaPromptFrame():
 
 
 class ChooseProjectPrompt():
-    def __init__(self, parent, name, frame_text, project_list):
+    def __init__(self, parent, name, frame_text, project_list, action):
         self.parent  = parent
         self.name = name
         
         popup = Toplevel()
         popup.attributes("-topmost", True)
 
-        frame1 = LabelFrame(
+        self.frame1 = LabelFrame(
             popup,
             text=frame_text,
         )
-        self.frame1 = frame1
-
-        
+        #self.frame1 = frame1        
 
         # Create GUI for project choosing
-        current_var = tk.StringVar()
-        project = ttk.Combobox(
-            frame1,
-            #container=self.frame1,
-            #values=project_list,
-            textvariable=current_var
+        self.project_var = tk.StringVar()
+        self.project_prompt = ttk.Menubutton(
+            self.frame1,
+            textvariable=self.project_var
         )
-        project.pack(anchor=W)
-        project['values'] = project_list
+        menu = tk.Menu(self.project_prompt, tearoff=False)        
+        for project in project_list:
+            menu.add_radiobutton(
+                label=project,
+                value=project,
+                variable=self.project_var)
+        self.project_prompt['menu'] = menu
+        self.project_prompt.pack()
+
+        
 
     
     # Apply grid() functionality to this class
     def grid(self, **kwargs):
         self.frame1.grid(kwargs)
+    
+    def get_value(self):
+        project_choice = self.project_var.get()
+        
+        print(project_choice)
 
