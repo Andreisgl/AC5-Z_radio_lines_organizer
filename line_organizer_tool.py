@@ -139,11 +139,11 @@ def choose_project():
     print('Choose which project to open/create:')
 
 
-    popup = Toplevel()
-    popup.attributes("-topmost", True)
+    project_popup = Toplevel()
+    project_popup.attributes("-topmost", True)
     
 
-    project_menu = GUItems.ChooseProjectFrame(popup, 'choose_project', 'Choose Project', projects_list, '')
+    project_menu = GUItems.ChooseProjectFrame(project_popup, 'choose_project', 'Choose Project', projects_list, '')
     project_menu.pack()
 
     # Create a button to get the selected project
@@ -153,11 +153,12 @@ def choose_project():
             messagebox.showwarning("Warning", "No project was selected!")
             return
         print('Project selected:', chosen_project)
+        project_popup.destroy()
         open_project(chosen_project)
         
-    get_project_button = ttk.Button(popup, text="Choose Project", command=get_project)
+    get_project_button = ttk.Button(project_popup, text="Choose Project", command=get_project)
     get_project_button.pack()
-    GUItems.center_window(popup, True)
+    GUItems.center_window(project_popup, True)
 
     
 # TKINTER SETUP
