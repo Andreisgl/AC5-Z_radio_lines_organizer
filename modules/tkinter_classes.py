@@ -82,7 +82,7 @@ class ProjectMetaPromptFrame():
 
         self.field_widgets = []
         for field in fields:
-            aux = RadioboxFrame(parent, 'name', field[0], field[1])
+            aux = RadioboxFrame(parent, field[0], field[0], field[1])
             self.field_widgets.append(aux)
         
         for field in self.field_widgets:
@@ -96,11 +96,12 @@ class ProjectMetaPromptFrame():
         self.frame1.pack(**kwargs)
     
     def get_value(self):
+        # Returns values as:
+        # ((FIELD_NAME1, VALUE), (FIELD_NAME2, VALUE))
         results = []
         for field in self.field_widgets:
-            results.append(field.get_value())
-        print(results)
-        return results
+            results.append((field.name, field.get_value()))
+        return tuple(results)
     
 class ChooseProjectFrame():
     def __init__(self, parent, name, frame_text, project_list, action):

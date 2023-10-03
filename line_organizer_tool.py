@@ -123,52 +123,65 @@ def open_project(chosen_project):
     if not os.path.exists(PROJECT_META_FILE_PATH): # Project metadata folder
         project_is_new = True
         
-    if project_is_new:
-        prepare_meta_file()
+    
+    prepare_meta_file(project_is_new)
     #endregion
 
-def prepare_meta_file():
+def prepare_meta_file(project_is_new):
     # Track info stuff
+
+    # If file is not new, read it. 
+    # If it is, create and get data
 
     # What data do I need to store?
     # If tracks are BGM or RADIO
     # What game they belong to
-    # 
+    #
 
     global PROJECT_META_FILE_PATH
 
     global TRACKS_ARE_BGM
-    TRACK_TYPE_HEADER = 'TRACK_TYPE:'
+    TRACK_TYPE_HEADER = 'TRACK_TYPE'
     TRACK_TYPE_OPTIONS = ('BGM', 'RADIO')
 
     global CURRENT_GAME
-    GAME_TYPE_HEADER = 'GAME:'
+    GAME_TYPE_HEADER = 'GAME'
     GAME_TYPE_OPTIONS = ('ACZ',)
 
-
-    print('meta file is new!')
+    
+   
     print('PROMPT USER ABOUT FILE METADATA')
 
-    meta_prompt_fields = ( ('GAME', ('AC5', 'ACZ')), ('TRACK TYPE', ('BGM', 'RADIO')) )
+    meta_prompt_fields = ((GAME_TYPE_HEADER, GAME_TYPE_OPTIONS),
+                          (TRACK_TYPE_HEADER, TRACK_TYPE_OPTIONS)
+                          )
     
-    # Initiate metadata GUI
-    meta_popup = Toplevel()
-    meta_popup.attributes("-topmost", True)
 
-    choose_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_menu', 'Project metadata', meta_prompt_fields)
 
-    # Create a button to get the selected project
-    def get_metadata():
-        chosen_meta = choose_menu.get_value()
-        if chosen_meta == '':
-            messagebox.showwarning("Warning", "No project was selected!")
-            return
-        meta_popup.destroy()
-        print('Metadata chosen:', chosen_meta)
+    if project_is_new: # If project is new, prompt user to choose the metadata
+        # Initiate metadata GUI
+        print('meta file is new!')
+        meta_popup = Toplevel()
+        meta_popup.attributes("-topmost", True)
+
+        meta_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_meta', 'Project metadata', meta_prompt_fields)
+
+        # Create a button to get the selected project
+        def get_metadata():
+            chosen_meta = meta_menu.get_value()
+            if chosen_meta == '':
+                return
+            meta_popup.destroy()
+            print('Metadata chosen:', chosen_meta)
+            write_metadata_file(chosen_meta)
         
-    get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
-    get_metadata_button.pack()
-    GUItems.center_window(meta_popup, True)
+        def write_metadata_file(meta_output):
+            PROJECT_META_FILE_PATH
+            pass
+            
+        get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
+        get_metadata_button.pack()
+        GUItems.center_window(meta_popup, True)
 
 
 def main(): 
