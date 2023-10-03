@@ -71,7 +71,7 @@ def choose_project():
         if not chosen_project:
             get_project_button['text'] = 'Input a valid name!'
             return
-        print('Project selected:', chosen_project)
+        print('Project selected: "{}"'.format(chosen_project))
         project_popup.destroy()
         open_project(chosen_project)
     
@@ -102,6 +102,9 @@ def open_project(chosen_project):
     # The existence of this file indicates a dir is a project
     global PROJECT_META_FILE_PATH 
     
+    # Print
+    print('Opening "{}"'.format(chosen_project))
+
     # Names and paths
     PROJECT_NAME = chosen_project
     PROJECT_PATH = os.path.join(PROJECTS_DB_PATH, PROJECT_NAME)
