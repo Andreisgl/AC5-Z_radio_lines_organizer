@@ -4,7 +4,7 @@
 # will be saved to a .csv file for indexing.
 
 import os
-#import csv
+import csv
 #import subprocess
 
 import tkinter as tk
@@ -14,6 +14,7 @@ import tkinter.ttk as ttk
 from tkinter.ttk import *
 
 from modules import tkinter_classes as GUItems
+from modules import csv_methods as csv_m
 
 
 # TKINTER SETUP
@@ -108,7 +109,7 @@ def open_project(chosen_project):
     # Names and paths
     PROJECT_NAME = chosen_project
     PROJECT_PATH = os.path.join(PROJECTS_DB_PATH, PROJECT_NAME)
-    PROJECT_META_FILE_PATH = os.path.join(PROJECT_PATH, 'project.ACL')
+    PROJECT_META_FILE_PATH = os.path.join(PROJECT_PATH, 'project.csv')
     LINES_FOLDER_PATH = os.path.join(PROJECT_PATH, 'lines')
     LINE_INFO_FILE_PATH = os.path.join(PROJECT_PATH, 'line_data.csv')
 
@@ -175,9 +176,11 @@ def prepare_meta_file(project_is_new):
             print('Metadata chosen:', chosen_meta)
             write_metadata_file(chosen_meta)
         
-        def write_metadata_file(meta_output):
-            PROJECT_META_FILE_PATH
-            pass
+        def write_metadata_file(meta_input):
+            # Writes data to metadata file in the format:
+            # FIELD_NAME:VALUE
+            print(meta_input)
+            csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
             
         get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
         get_metadata_button.pack()
