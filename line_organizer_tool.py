@@ -62,21 +62,29 @@ def choose_project():
     
 
     project_menu = GUItems.ChooseProjectFrame(project_popup, 'choose_project', 'Choose Project', projects_list, '')
+    project_combobox = project_menu.project_prompt
     project_menu.pack()
 
     # Create a button to get the selected project
     def get_project():
         chosen_project = project_menu.get_value()
-        if chosen_project == '':
-            messagebox.showwarning("Warning", "No project was selected!")
+        if not chosen_project:
+            get_project_button['text'] = 'Input a valid name!'
             return
         print('Project selected:', chosen_project)
         project_popup.destroy()
         open_project(chosen_project)
-        
+    
     get_project_button = ttk.Button(project_popup, text="Choose Project", command=get_project)
     get_project_button.pack()
+
+
+
+
     GUItems.center_window(project_popup, True)
+
+
+    
 
 def open_project(chosen_project):
     # Assemble important paths and folders for the project.
