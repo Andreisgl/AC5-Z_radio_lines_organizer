@@ -178,7 +178,7 @@ def prepare_meta_file(project_is_new):
         
         def write_metadata_file(meta_input):
             # Writes data to metadata file in the format:
-            # FIELD_NAME:VALUE
+            # FIELD_NAME\VALUE
             print(meta_input)
             csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
             
