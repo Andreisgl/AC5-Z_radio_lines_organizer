@@ -141,7 +141,7 @@ def prepare_meta_file(project_is_new):
 
     global PROJECT_META_FILE_PATH
 
-    global TRACKS_ARE_BGM
+    global CURRENT_TRACK_TYPE
     TRACK_TYPE_HEADER = 'TRACK_TYPE'
     TRACK_TYPE_OPTIONS = ('BGM', 'RADIO')
 
@@ -149,9 +149,6 @@ def prepare_meta_file(project_is_new):
     GAME_TYPE_HEADER = 'GAME'
     GAME_TYPE_OPTIONS = ('ACZ',)
 
-    
-   
-    print('PROMPT USER ABOUT FILE METADATA')
 
     meta_prompt_fields = ((GAME_TYPE_HEADER, GAME_TYPE_OPTIONS),
                           (TRACK_TYPE_HEADER, TRACK_TYPE_OPTIONS)
@@ -169,6 +166,10 @@ def prepare_meta_file(project_is_new):
 
         # Create a button to get the selected project
         def get_metadata():
+            '''
+            Method to return user-inputted metadata
+            and proceed to write metadata file
+            '''
             chosen_meta = meta_menu.get_value()
             if chosen_meta == '':
                 return
@@ -177,8 +178,10 @@ def prepare_meta_file(project_is_new):
             write_metadata_file(chosen_meta)
         
         def write_metadata_file(meta_input):
-            # Writes data to metadata file in the format:
-            # FIELD_NAME\VALUE
+            '''
+            Writes data to metadata file in the format:
+            FIELD_NAME\VALUE
+            '''
             print(meta_input)
             csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
             
@@ -186,6 +189,21 @@ def prepare_meta_file(project_is_new):
         get_metadata_button.pack()
         GUItems.center_window(meta_popup, True)
 
+    # Read metadata file
+    fetched_metadata = csv_m.get_rows_line_data_csv(PROJECT_META_FILE_PATH)
+    
+    # Assign fetched data to final variables
+    CURRENT_GAME = fetched_metadata[0][1]
+    CURRENT_TRACK_TYPE = fetched_metadata[1][1]
+    
+    #region # Metadata printing
+    game_meta = '{}: {}'.format(fetched_metadata[0][0], fetched_metadata[0][1])
+    type_meta = '{}: {}'.format(fetched_metadata[1][0], fetched_metadata[1][1])
+    print('Project metadata:\n{}\n{}'.format(game_meta, type_meta))
+    #endregion
+
+    # Proceed to next section
+    
 
 def main(): 
     check_paths()
