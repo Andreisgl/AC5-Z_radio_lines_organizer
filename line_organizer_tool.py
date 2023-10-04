@@ -82,7 +82,7 @@ def choose_project():
 
 
 
-    GUItems.center_window(project_popup, True)
+    GUItems.center_window(project_popup)
 
 
     
@@ -187,7 +187,7 @@ def prepare_meta_file(project_is_new):
             
         get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
         get_metadata_button.pack()
-        GUItems.center_window(meta_popup, True)
+        GUItems.center_window(meta_popup)
 
     # Read metadata file
     fetched_metadata = csv_m.get_rows_line_data_csv(PROJECT_META_FILE_PATH)
@@ -203,7 +203,24 @@ def prepare_meta_file(project_is_new):
     #endregion
 
     # Proceed to next section
-    
+    manipulate_tracks()
+
+def manipulate_tracks():
+    # In this function, I need to:
+    # Browse all lines,
+    # Display their metadata and replay them
+
+    # Create GUI
+
+    global root
+    global LINES_FOLDER_PATH
+
+    test_line = GUItems.LineEntryItem(root, 'line1', 'TRACKNAME', ('a', 'b'))
+    test_line.pack()
+
+    GUItems.center_window(root)
+    root.lift()
+    pass
 
 def main(): 
     check_paths()

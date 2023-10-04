@@ -138,3 +138,76 @@ class ChooseProjectFrame():
         project_choice = self.project_var.get()
         return project_choice
 
+class LineManipulationFrame():
+    '''
+    This class contains the list that allows the user to browse all line files
+    '''
+    # Options must be formatted as such:
+    # ( (field1, (option1, option2)), (field2, (option1, option2)) )
+    def __init__(self, parent, name, frame_text, fields):
+        self.parent  = parent
+        self.name = name
+        
+        self.frame1 = LabelFrame(
+            parent,
+            text=frame_text,
+        )
+
+        self.field_widgets = []
+        for field in fields:
+            aux = RadioboxFrame(parent, field[0], field[0], field[1])
+            self.field_widgets.append(aux)
+        
+        for field in self.field_widgets:
+            field.pack()
+            pass
+
+    # Apply grid() functionality to this class
+    def grid(self, **kwargs):
+        self.frame1.grid(kwargs)
+    def pack(self, **kwargs):
+        self.frame1.pack(**kwargs)
+    
+    def get_value(self):
+        # Returns values as:
+        # ((FIELD_NAME1, VALUE), (FIELD_NAME2, VALUE))
+        results = []
+        for field in self.field_widgets:
+            results.append((field.name, field.get_value()))
+        return tuple(results)
+
+class LineEntryItem():
+    '''
+    This class represents a single line entry
+    for each line that is contained in the lines folder
+    '''
+    # Data to be present in each entry:
+    # 1 - index
+    # 2 - File name
+    # 3 - Text
+    # 4 - Play button
+
+    def __init__(self, parent, name, frame_text, fields):
+        self.parent  = parent
+        self.name = name
+        
+        self.frame1 = LabelFrame(
+            parent,
+            text=frame_text,
+        )
+
+        self.field_widgets = []
+        for field in fields:
+            aux = Label(self.frame1)
+            self.field_widgets.append(aux)
+        
+        for field in self.field_widgets:
+            field.pack()
+    
+    # Apply grid() functionality to this class
+    def grid(self, **kwargs):
+        self.frame1.grid(kwargs)
+    def pack(self, **kwargs):
+        self.frame1.pack(**kwargs)
+
+    pass
