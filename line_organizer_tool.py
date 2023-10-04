@@ -23,7 +23,7 @@ def setup_root_window():
     root = tk.Tk()
     root.title('AC5-Z_RADIO_LINES_ORGANIZER')
 
-    GUItems.center_window(root, False)
+    GUItems.center_window(root)
 
 
 # BASIC PATH AND PROJECT PREPARING

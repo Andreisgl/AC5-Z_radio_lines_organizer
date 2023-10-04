@@ -7,18 +7,16 @@ from tkinter.ttk import *
 from ttkwidgets.autocomplete import *
 #from tkinter.messagebox import showinfo
 
-def center_window(window, adjust_size = True):
+def center_window(window):
     # This function automatically centers the window passed as parameter.
     # Get the screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
     
-    if adjust_size: # Calculate the window width and height
-        window_width = window.winfo_reqwidth()
-        window_height = window.winfo_reqheight()
-    else: # Get window's dimensions if you don't want to set them
-        window_width = window.winfo_width()
-        window_height = window.winfo_height()
+
+    window_width = window.winfo_reqwidth()
+    window_height = window.winfo_reqheight()
+
 
     # Calculate the x and y coordinates for centering the window
     x = (screen_width // 2) - (window_width // 2)
