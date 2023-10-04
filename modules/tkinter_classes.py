@@ -185,22 +185,40 @@ class LineEntryItem():
     # 3 - Text
     # 4 - Play button
 
-    def __init__(self, parent, name, frame_text, fields):
+    def __init__(self, parent, name, index_text, filename_text, line_text):
         self.parent  = parent
         self.name = name
         
-        self.frame1 = LabelFrame(
+        def set_styles():
+            test_style = ttk.Style()
+            test_style.configure('test.TFrame', background='blue')
+            test_style = ttk.Style()
+            test_style.configure('done.TFrame', background='green')
+        set_styles()
+        self.frame1 = ttk.Frame(
             parent,
-            text=frame_text,
+            style='test.TFrame',
+            relief="solid",
+            borderwidth=2
         )
+        self.frame1.pack(fill="x", expand=True)
+        self.frame1.configure(style='done.TFrame')
 
-        self.field_widgets = []
-        for field in fields:
-            aux = Label(self.frame1)
-            self.field_widgets.append(aux)
+        track_index = tk.Label(self.frame1, text=index_text, padx=10)
+        track_index.grid(column=0, row=0)
+
+        track_name = tk.Label(self.frame1, text=filename_text, padx=10)
+        track_name.grid(column=1, row=0)
+
+        track_text = tk.Label(self.frame1, text=line_text, padx=10)
+        track_text.grid(column=2, row=0)
+
+        play_track = tk.Button(self.frame1, text='PLAY', padx=10, height=track_text.winfo_height())
+        play_track.grid(column=3, row=0)
         
-        for field in self.field_widgets:
-            field.pack()
+        
+    
+    
     
     # Apply grid() functionality to this class
     def grid(self, **kwargs):

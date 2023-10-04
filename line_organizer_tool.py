@@ -215,7 +215,7 @@ def manipulate_tracks():
     global root
     global LINES_FOLDER_PATH
 
-    test_line = GUItems.LineEntryItem(root, 'line1', 'TRACKNAME', ('a', 'b'))
+    test_line = GUItems.LineEntryItem(root, 'line1', 'INDEX', 'FILENAME', 'LINETEXT')
     test_line.pack()
 
     GUItems.center_window(root)
