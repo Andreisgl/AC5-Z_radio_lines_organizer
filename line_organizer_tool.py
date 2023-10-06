@@ -215,9 +215,11 @@ def manipulate_tracks():
     global root
     global LINES_FOLDER_PATH
 
-    test_line = GUItems.LineEntryItem(root, 'line1', 'INDEX', 'FILENAME', 'LINETEXT')
-    test_line.pack()
+    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing')
 
+    
+
+  
     GUItems.center_window(root)
     root.lift()
     pass

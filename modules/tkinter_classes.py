@@ -136,44 +136,6 @@ class ChooseProjectFrame():
         project_choice = self.project_var.get()
         return project_choice
 
-class LineManipulationFrame():
-    '''
-    This class contains the list that allows the user to browse all line files
-    '''
-    # Options must be formatted as such:
-    # ( (field1, (option1, option2)), (field2, (option1, option2)) )
-    def __init__(self, parent, name, frame_text, fields):
-        self.parent  = parent
-        self.name = name
-        
-        self.frame1 = LabelFrame(
-            parent,
-            text=frame_text,
-        )
-
-        self.field_widgets = []
-        for field in fields:
-            aux = RadioboxFrame(parent, field[0], field[0], field[1])
-            self.field_widgets.append(aux)
-        
-        for field in self.field_widgets:
-            field.pack()
-            pass
-
-    # Apply grid() functionality to this class
-    def grid(self, **kwargs):
-        self.frame1.grid(kwargs)
-    def pack(self, **kwargs):
-        self.frame1.pack(**kwargs)
-    
-    def get_value(self):
-        # Returns values as:
-        # ((FIELD_NAME1, VALUE), (FIELD_NAME2, VALUE))
-        results = []
-        for field in self.field_widgets:
-            results.append((field.name, field.get_value()))
-        return tuple(results)
-
 class LineEntryItem():
     '''
     This class represents a single line entry
@@ -190,30 +152,46 @@ class LineEntryItem():
         self.name = name
         
         def set_styles():
+            std_text_style = ttk.Style()
+            std_text_style.configure('std.TLabel', font=("sans_serif", "9"), padding=(10, 0))
+
+            std_btn_style = ttk.Style()
+            std_btn_style.configure('std.TButton', font=("sans_serif", "5"))
+
             test_style = ttk.Style()
             test_style.configure('test.TFrame', background='blue')
             test_style = ttk.Style()
             test_style.configure('done.TFrame', background='green')
+
+        def play_track():
+            print('PLAY TRACK!!!')
+            pass
+
         set_styles()
+
         self.frame1 = ttk.Frame(
             parent,
             style='test.TFrame',
-            relief="solid",
+            relief="ridge",
             borderwidth=2
         )
         self.frame1.pack(fill="x", expand=True)
         self.frame1.configure(style='done.TFrame')
 
-        track_index = tk.Label(self.frame1, text=index_text, padx=10)
+        track_index = ttk.Label(
+            self.frame1, text=index_text)
         track_index.grid(column=0, row=0)
 
-        track_name = tk.Label(self.frame1, text=filename_text, padx=10)
+        track_name = ttk.Label(
+            self.frame1, text=filename_text, style='std.TLabel')
         track_name.grid(column=1, row=0)
 
-        track_text = tk.Label(self.frame1, text=line_text, padx=10)
+        track_text = ttk.Label(
+            self.frame1, text=line_text, style='std.TLabel')
         track_text.grid(column=2, row=0)
 
-        play_track = tk.Button(self.frame1, text='PLAY', padx=10, height=track_text.winfo_height())
+        play_track = ttk.Button(
+            self.frame1, text='PLAY', style='std.TButton', command=play_track)
         play_track.grid(column=3, row=0)
         
         
@@ -226,4 +204,43 @@ class LineEntryItem():
     def pack(self, **kwargs):
         self.frame1.pack(**kwargs)
 
-    pass
+class LineManipulationFrame():
+    '''
+    This class contains the list that allows the user to browse all line files
+    '''
+    # Options must be formatted as such:
+    # ( (field1, (option1, option2)), (field2, (option1, option2)) )
+    def __init__(self, parent, name):
+        self.parent  = parent
+        self.name = name
+        
+        # Create a canvas to hold the LineEntryItem widgets
+        canvas = tk.Canvas(self.parent)
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Create a vertical scrollbar and attach it to the canvas
+        vsb = ttk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        # Create a frame to contain the LineEntryItem widgets
+        frame = ttk.Frame(canvas)
+        canvas.create_window((0, 0), window=frame, anchor=tk.NW)
+
+        # Add LineEntryItem widgets to the frame
+        for i in range(1, 200):
+            item = LineEntryItem(
+                frame,
+                name=f"Item {i}",
+                index_text=f"Index {i}",
+                filename_text=f"File {i}.txt",
+                line_text=f"Line {i}"
+            )
+            item.pack(fill="x")
+
+        # Bind the canvas to respond to changes in the frame size
+        def configure_frame(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        frame.bind("<Configure>", configure_frame)
+    
