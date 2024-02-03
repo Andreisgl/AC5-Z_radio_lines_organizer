@@ -249,3 +249,40 @@ class LineManipulationFrame():
 
         frame.bind("<Configure>", configure_frame)
     
+class EmptyProjectFrame():
+    def __init__(self, parent, name, frame_text, action):
+        self.parent  = parent
+        self.name = name
+        
+        
+
+        self.frame1 = LabelFrame(
+            parent,
+            text=frame_text,
+        )  
+
+        warning_label = ttk.Label(
+            self.frame1, text='aaaaaaa', style='std.TLabel')
+
+        # Create GUI for project choosing
+        self.project_var = tk.StringVar()
+        self.project_prompt = ttk.Combobox(
+            self.frame1,
+            #values = project_list,
+            textvariable=self.project_var
+        )
+
+        self.project_prompt.pack()
+
+        
+
+    
+    # Apply grid() functionality to this class
+    def grid(self, **kwargs):
+        self.frame1.grid(kwargs)
+    def pack(self, **kwargs):
+        self.frame1.pack(**kwargs)
+    
+    def get_value(self):
+        project_choice = self.project_var.get()
+        return project_choice

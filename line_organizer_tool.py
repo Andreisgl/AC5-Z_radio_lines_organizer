@@ -237,6 +237,11 @@ def manipulate_tracks():
     global root
     global LINES_FOLDER_PATH
 
+    tracks_list = ()
+
+    project_is_empty = True
+    empty_project_string = 'No tracks!\nLoad some on: {}'.format(LINES_FOLDER_PATH)
+
     # Just placeholder data for now. One line/track per index
     # ((filename1, text1), (filename2, text2))
 
@@ -249,18 +254,64 @@ def manipulate_tracks():
             # mission
             # Ace Style
 
-    placeholder_lines_data = (
-            ('filename1', 'Mobius One, engage'),
-            ('filename2', "I respectfully ask to be called *Chopper*, sir. I'm afraid I may not be able to respond to any other moniker."))
-    
-    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing', placeholder_lines_data)
+    #placeholder_lines_data = (
+    #        ('filename1', 'Mobius One, engage'),
+    #        ('filename2', "I respectfully ask to be called *Chopper*, sir. I'm afraid I may not be able to respond to any other moniker."))
+    #
+    #lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing', placeholder_lines_data)
 
+
+    def check_tracks_list():
+        # Checks if there are tracks present.
+        # If so, return 'True'. Else, return 'False'
+        # Load tracks from their folder
+        tracks_list = tuple(os.listdir(LINES_FOLDER_PATH))
+        print(tracks_list)
+
+        if len(tracks_list) <= 0:
+            project_is_empty = True
+        else:
+            project_is_empty = False
+        
+        if project_is_empty:
+            print(empty_project_string)
+        
+        return not project_is_empty
+        
+    # Create a button to get the selected project
+    def continue_project():
+
+        # If there are no files, do nothing
+        if not check_tracks_list():
+            return
+        # Else, procceed
+        continue_frame.destroy()
+    
+    # Adapt root window's width
+    def adapt_root_width():
+        root.update_idletasks()
+        root.geometry(f"{warning_label.winfo_reqwidth()}x{root.winfo_height()}")
+
+
+    continue_frame = ttk.Frame(root)
+    warning_label = Label(
+            continue_frame,
+            text=empty_project_string,
+        )
+    
+    continue_project_button = ttk.Button(continue_frame, text="Try Again", command=continue_project)
+    
+    continue_frame.pack()
+    warning_label.pack(fill=tk.BOTH, expand=True) # I changed this
+    continue_project_button.pack()
+        
     
 
-  
-    GUItems.center_window(root)
+    adapt_root_width()
+
+    #GUItems.center_window(warning_label)
+    #GUItems.center_window(root)
     root.lift()
-    pass
 
 def main(): 
     check_paths()
