@@ -237,7 +237,7 @@ def manipulate_tracks():
     global root
     global LINES_FOLDER_PATH
 
-    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing')
+    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing', ('',))
 
     
 

@@ -164,7 +164,9 @@ class LineEntryItem():
             test_style.configure('done.TFrame', background='green')
 
         def play_track():
-            print('PLAY TRACK!!!')
+            print('PLAY TRACK!!!\t Index: {} - Filename: {} - Line: {}'.format(
+                index_text, filename_text, line_text
+            ))
             pass
 
         set_styles()
@@ -210,7 +212,7 @@ class LineManipulationFrame():
     '''
     # Options must be formatted as such:
     # ( (field1, (option1, option2)), (field2, (option1, option2)) )
-    def __init__(self, parent, name):
+    def __init__(self, parent, name, lines_data):
         self.parent  = parent
         self.name = name
         
@@ -228,13 +230,30 @@ class LineManipulationFrame():
         canvas.create_window((0, 0), window=frame, anchor=tk.NW)
 
         # Add LineEntryItem widgets to the frame
-        for i in range(1, 200):
+        #for i in range(1, 200):
+        #    item = LineEntryItem(
+        #        frame,
+        #        name=f"Item {i}",
+        #        index_text=f"Index {i}",
+        #        filename_text=f"File {i}.txt",
+        #        line_text=f"Line {i}"
+        #    )
+        #    item.pack(fill="x")
+
+        # Just placeholder data for now. One line/track per index
+        # ((filename1, text1), (filename2, text2))
+        lines_data = (
+            ('filename1', 'Mobius One, engage'),
+            ('filename2', "I respectfully request to be called *Chopper*, sir. I'm afraid I may not be able to respond to any other moniker."))
+        for index, i in enumerate(lines_data):
+
             item = LineEntryItem(
                 frame,
                 name=f"Item {i}",
-                index_text=f"Index {i}",
-                filename_text=f"File {i}.txt",
-                line_text=f"Line {i}"
+                
+                index_text=f"Index: {index}",
+                filename_text=f"{i[0]}",
+                line_text=f"{i[1]}"
             )
             item.pack(fill="x")
 
