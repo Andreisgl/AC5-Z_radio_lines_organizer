@@ -155,16 +155,14 @@ def prepare_meta_file(project_is_new):
                           )
     
     # Create a button to get the selected project
-    def get_metadata():
+    def get_metadata_input():
         '''
         Method to return user-inputted metadata
         and proceed to write metadata file
         '''
 
         successful = False
-        
         chosen_meta = meta_menu.get_value()
-
         print('User input: {}'.format(chosen_meta))
 
         for field in chosen_meta: # Check for any invalid values
@@ -180,7 +178,7 @@ def prepare_meta_file(project_is_new):
             print('Metadata chosen:', chosen_meta)
             write_metadata_file(chosen_meta)
         #else:
-        #    get_metadata() # Redo steps
+        #    get_metadata_input() # Redo steps
     
     def write_metadata_file(meta_input):
         '''
@@ -190,23 +188,10 @@ def prepare_meta_file(project_is_new):
         #print(meta_input)
         csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
 
+        get_existing_metadata() # Open recently-written metadata
 
-    if project_is_new: # If project is new, prompt user to choose the metadata
-        # Initiate metadata GUI
-        print('meta file is new!')
-        meta_popup = Toplevel()
-        meta_popup.attributes("-topmost", True)
-
-        meta_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_meta', 'Project metadata', meta_prompt_fields)
-
-        
-            
-        get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
-        get_metadata_button.pack()
-        GUItems.center_window(meta_popup)
-    
-    else:
-        # Read metadata file
+    def get_existing_metadata():
+        # If already existing or just created, read metadata file
         fetched_metadata = csv_m.get_rows_line_data_csv(PROJECT_META_FILE_PATH)
         
         # Assign fetched data to final variables
@@ -221,6 +206,26 @@ def prepare_meta_file(project_is_new):
 
         # Proceed to next section
         manipulate_tracks()
+
+    if project_is_new: # If project is new, prompt user to choose the metadata
+        # Initiate metadata GUI
+        print('meta file is new!')
+        meta_popup = Toplevel()
+        meta_popup.attributes("-topmost", True)
+
+        # Create prompt for user to input new metadata
+        meta_menu = GUItems.ProjectMetaPromptFrame(meta_popup,
+                                                   'choose_meta',
+                                                   'Project metadata',
+                                                   meta_prompt_fields)
+
+        get_metadata_button = ttk.Button(meta_popup, text="Get Value",
+                                         command=get_metadata_input)
+        get_metadata_button.pack()
+        GUItems.center_window(meta_popup)
+    else:
+        get_existing_metadata() # Get already-existing metadata
+    
 
 def manipulate_tracks():
     # In this function, I need to:
