@@ -154,6 +154,41 @@ def prepare_meta_file(project_is_new):
                           (TRACK_TYPE_HEADER, TRACK_TYPE_OPTIONS)
                           )
     
+    # Create a button to get the selected project
+    def get_metadata():
+        '''
+        Method to return user-inputted metadata
+        and proceed to write metadata file
+        '''
+
+        successful = False
+        
+        chosen_meta = meta_menu.get_value()
+
+        print('User input: {}'.format(chosen_meta))
+
+        for field in chosen_meta: # Check for any invalid values
+            for data in field:
+                if data == '':
+                    successful = False
+                    print('Invalid Metadata!')
+                else:
+                    successful = True
+        
+        if successful:
+            meta_popup.destroy()
+            print('Metadata chosen:', chosen_meta)
+            write_metadata_file(chosen_meta)
+        #else:
+        #    get_metadata() # Redo steps
+    
+    def write_metadata_file(meta_input):
+        '''
+        Writes data to metadata file in the format:
+        FIELD_NAME\VALUE
+        '''
+        #print(meta_input)
+        csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
 
 
     if project_is_new: # If project is new, prompt user to choose the metadata
@@ -164,46 +199,28 @@ def prepare_meta_file(project_is_new):
 
         meta_menu = GUItems.ProjectMetaPromptFrame(meta_popup, 'choose_meta', 'Project metadata', meta_prompt_fields)
 
-        # Create a button to get the selected project
-        def get_metadata():
-            '''
-            Method to return user-inputted metadata
-            and proceed to write metadata file
-            '''
-            chosen_meta = meta_menu.get_value()
-            if chosen_meta == '':
-                return
-            meta_popup.destroy()
-            print('Metadata chosen:', chosen_meta)
-            write_metadata_file(chosen_meta)
         
-        def write_metadata_file(meta_input):
-            '''
-            Writes data to metadata file in the format:
-            FIELD_NAME\VALUE
-            '''
-            print(meta_input)
-            csv_m.write_row_line_data_csv(meta_input, True, PROJECT_META_FILE_PATH)
             
         get_metadata_button = ttk.Button(meta_popup, text="Get Value", command=get_metadata)
         get_metadata_button.pack()
         GUItems.center_window(meta_popup)
-
-    # Read metadata file
-    fetched_metadata = csv_m.get_rows_line_data_csv(PROJECT_META_FILE_PATH)
     
-    # Assign fetched data to final variables
-    CURRENT_GAME = fetched_metadata[0][1]
-    CURRENT_TRACK_TYPE = fetched_metadata[1][1]
+    else:
+        # Read metadata file
+        fetched_metadata = csv_m.get_rows_line_data_csv(PROJECT_META_FILE_PATH)
+        
+        # Assign fetched data to final variables
+        CURRENT_GAME = fetched_metadata[0][1]
+        CURRENT_TRACK_TYPE = fetched_metadata[1][1]
     
-    #region # Metadata printing
-    game_meta = '{}: {}'.format(fetched_metadata[0][0], fetched_metadata[0][1])
-    type_meta = '{}: {}'.format(fetched_metadata[1][0], fetched_metadata[1][1])
-    print('Project metadata:\n{}\n{}'.format(game_meta, type_meta))
-    #endregion
+        #region # Metadata printing
+        game_meta = '{}: {}'.format(fetched_metadata[0][0], fetched_metadata[0][1])
+        type_meta = '{}: {}'.format(fetched_metadata[1][0], fetched_metadata[1][1])
+        print('Project metadata:\n{}\n{}'.format(game_meta, type_meta))
+        #endregion
 
-    # Proceed to next section
-    manipulate_tracks()
+        # Proceed to next section
+        manipulate_tracks()
 
 def manipulate_tracks():
     # In this function, I need to:
