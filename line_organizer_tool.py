@@ -237,7 +237,23 @@ def manipulate_tracks():
     global root
     global LINES_FOLDER_PATH
 
-    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing', ('',))
+    # Just placeholder data for now. One line/track per index
+    # ((filename1, text1), (filename2, text2))
+
+    # TODO: Complete line data to implement later:
+        # AUDIO FILE
+            # audio filename
+        # LINE TEXT
+            # line (transcription of what is heard in the audio)
+            # speaker (who speaks the line)
+            # mission
+            # Ace Style
+
+    placeholder_lines_data = (
+            ('filename1', 'Mobius One, engage'),
+            ('filename2', "I respectfully ask to be called *Chopper*, sir. I'm afraid I may not be able to respond to any other moniker."))
+    
+    lines_frame = GUItems.LineManipulationFrame(root, 'lines_frame_thing', placeholder_lines_data)
 
     
 
