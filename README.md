@@ -75,6 +75,11 @@ The first non-dummy file is one of Pixy's lines. Let's see how it will be filled
 As you can see, the "ACE_STYLE" field has preset values to choose from, but it also gives you the option to input a custom value.
 
 
+## CSV DATA
+This tool uses a custom .csv separator and quotechar.
+SEPARATOR: \
+QUOTECHAR: `
+
 
 ## ROADMAP
 This tool is a WIP. Some of the features implement and objectives to reach are the following:
