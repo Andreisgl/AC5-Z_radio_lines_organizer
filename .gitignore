@@ -3,6 +3,7 @@ PROJECTS/*
 *.npsf
 #*.csv
 MFAudio/
+storage/
 
 !/PROJECTS/ACZ
 
