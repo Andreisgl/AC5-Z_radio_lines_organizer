@@ -391,7 +391,7 @@ def surf_lines(line_info, ignore_unknowns):
     cmd_playback = 'PLAYBACK' # Invokes MFAudio to play file
     cmd_show_data = 'SHOW_DATA' # Shows current data for the selected line
     cmd_enter_data = 'ENTER_DATA' # Fill out a field in the chosen line
-    cmd_back = 'BACK' # Exit line and return to line choice loop
+    cmd_back = 'BACK' # Exit line and return to main menu loop
     #
     track_command_list = (
         cmd_playback,
@@ -406,10 +406,10 @@ def surf_lines(line_info, ignore_unknowns):
     
     # Universal Commands:
     def display_help():
-        pass
+        print('!!!!!!!!!TODO: Do help prompt!!!')
     #
     def exit_loop():
-        pass
+        print('Exiting application')
 
     # Menu Commands:
     display_set = line_info[:] # Standard value for this set # TODO: Maybe this line is redundant
@@ -444,48 +444,81 @@ def surf_lines(line_info, ignore_unknowns):
     current_track = -1 # Indicates what track was chosen. If none, value = -1
     def choose_track():
         answer = prompt_user_list(line_info, False, False)
-
         print(f'Chosen track: {answer}')
         return answer
     
     
     #endregion
 
-
-
-
     
     while True: # Option loop for commands
         print('Options:')
-        # Available options to choose from
-        options_list = menu_command_list + universal_command_list
-
-        choice_index = prompt_user_list(options_list, False)
-        answer = options_list[choice_index]
-        print(f'You chose: index: {choice_index} item: {answer}')
+        options_list = [] # List containing all available commands
         
+        # MAIN MENU
+        if current_track == -1:
+            options_list = menu_command_list + universal_command_list
 
-        if answer == cmd_display_tracks:
-            display_tracks(display_interval[0], display_interval[1])
-        #
-        elif answer == cmd_set_display_interval:
-            display_interval[0], display_interval[1] = set_display_interval()
-        #
-        elif answer == cmd_choose_track:
-            current_track = choose_track()
-        #
-        elif answer == cmd_display_help:
-            pass
-        #
-        elif answer == cmd_exit_loop:
+            choice_index = prompt_user_list(options_list, False)
+            answer = options_list[choice_index]
+            print(answer)
+
+            #region Main Menu option routes
+            if answer == cmd_display_tracks:
+                display_tracks(display_interval[0], display_interval[1])
+            #
+            elif answer == cmd_set_display_interval:
+                display_interval[0], display_interval[1] = set_display_interval()
+            #
+            elif answer == cmd_choose_track:
+                current_track = choose_track()
+            #
+            elif answer == cmd_display_help:
+                display_help()
+            #
+            elif answer == cmd_exit_loop:
+                quit = True
+            #
+            else:
+                print('Unknown command!')
+                break
+            #endregion
+        
+        # TRACK MENU
+        elif current_track >= 0 and current_track < len(line_info) : # A track was selected
+            options_list = track_command_list + universal_command_list
+
+            choice_index = prompt_user_list(options_list, False)
+            answer = options_list[choice_index]
+            print(answer)
+
+            while True:
+                #region Track Menu option routes
+                if answer == '':
+                    pass
+                #
+                elif answer == cmd_display_help:
+                    display_help()
+                #
+                elif answer == cmd_back:
+                    current_track = -1
+                    print('Back to Main Menu')
+                    break
+                #
+                elif answer == cmd_exit_loop:
+                    quit = True
+                    break
+                #
+                else:
+                    print('Unknown command!')
+                    break
+                #endregion
+        if quit:
+            exit_loop()
             break
 
-        # TODO: Maybe move all elifs into this if track == -1
-        if current_track != -1: # If a track is selected
-            while False:
-                pass # Do track-specific stuff here
 
-        pass
+
 
         if False:
             # Conditionals for each command
@@ -516,6 +549,7 @@ def surf_lines(line_info, ignore_unknowns):
 
 
     # Reassemble file for outputting
+    print('SAVING DATA...')
     output_data = []
     for index, entry in enumerate(data_set):
         output_data.append(static_columns[index] + data_set[index])
