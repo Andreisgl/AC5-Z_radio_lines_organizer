@@ -273,7 +273,7 @@ def surf_lines(line_info, ignore_unknowns):
         '{} - Unknown data. When you don\'t know the answer for a field'.format(unknown_data),
         '{} - Unknown line. Mark whole line as unknown'.format(entry_unknown_line),
         '{} - Terminate. Stop inputting data, save and quit application'.format(entry_terminate),]
-    for help in help_messages:
+    for help in help_messages[:1]:
         print(help)
 
     input(INPUT_CONTINUE_MESSAGE)
@@ -295,59 +295,169 @@ def surf_lines(line_info, ignore_unknowns):
 
     quit = False
     
-    for line_index, line in enumerate(data_set):
-        if quit: # If user chose to quit in previous line
-            break
-        playback = True
-        track_name = static_columns[line_index][1]
-        
-        
-        for field_index, field in enumerate(line): # Check field
-            current_field = editable_header[field_index]
-
-            # Decide what to do based on data
-            if dummy_data in line: # Mark whole line and skip.
-                data_set[line_index] = [dummy_data for x in line]
+    if False: # Blocking this block so I can adapt the new terminal dynamic
+        for line_index, line in enumerate(data_set):
+            if quit: # If user chose to quit in previous line
                 break
-            elif field == unknown_data: # Determine what to do
-                if ignore_unknowns:
-                    continue # Skip field
-                else:
+            playback = True
+            track_name = static_columns[line_index][1]
+            
+            
+            for field_index, field in enumerate(line): # Check field
+                current_field = editable_header[field_index]
+
+                # Decide what to do based on data
+                if dummy_data in line: # Mark whole line and skip.
+                    data_set[line_index] = [dummy_data for x in line]
+                    break
+                elif field == unknown_data: # Determine what to do
+                    if ignore_unknowns:
+                        continue # Skip field
+                    else:
+                        pass # Go ahead to prompt
+                elif field == empty_data: # Must be filled up
                     pass # Go ahead to prompt
-            elif field == empty_data: # Must be filled up
-                pass # Go ahead to prompt
-            else: # Is user-input data. Skip.
-                continue # Skip field
-            
-            
-            if playback: # This is executed only once per track
-                # Play track for user
-                print('\n' + track_name) # Print file name
+                else: # Is user-input data. Skip.
+                    continue # Skip field
+                
+                
+                if playback: # This is executed only once per track
+                    # Play track for user
+                    print('\n' + track_name) # Print file name
 
-                track_path = os.path.join(LINES_FOLDER_PATH, track_name)
-                play_track(track_path) # Play track
-            playback = False
+                    track_path = os.path.join(LINES_FOLDER_PATH, track_name)
+                    play_track(track_path) # Play track
+                playback = False
 
-            # Data entry
-            answer = input('Enter your data for {}: '.format(current_field))
+                # Data entry
+                answer = input('Enter your data for {}: '.format(current_field))
 
-            if answer == entry_terminate:
-                # Quit prompt
-                quit = True
-                break
-            elif answer == entry_dummy:
-                # Mark whole line as dummy and skip
-                data_set[line_index] = [dummy_data for x in line]
-                break
-            elif answer == entry_skip_line: # Skip line without inputting
-                break
-            elif answer == entry_unknown_line: # Mark whole line as unknown and skip
-                data_set[line_index] = [unknown_data for x in line]
-                break
-            else: # Pass answer to field
-                data_set[line_index][field_index] = answer
-                pass
+                if answer == entry_terminate:
+                    # Quit prompt
+                    quit = True
+                    break
+                elif answer == entry_dummy:
+                    # Mark whole line as dummy and skip
+                    data_set[line_index] = [dummy_data for x in line]
+                    break
+                elif answer == entry_skip_line: # Skip line without inputting
+                    break
+                elif answer == entry_unknown_line: # Mark whole line as unknown and skip
+                    data_set[line_index] = [unknown_data for x in line]
+                    break
+                else: # Pass answer to field
+                    data_set[line_index][field_index] = answer
+                    pass
     
+
+    # Display routine
+    pass
+    
+    
+
+    #region Commands list
+    # Types of commands:
+    # UNIVERSAL COMMANDS: Can be executed anywhere
+    cmd_help = "HELP" # Display commands
+    cmd_exit = 'EXIT' # Saves progress and exits the main program
+    #
+    universal_command_list = (
+        cmd_help,
+        cmd_exit
+    )
+
+    # MENU COMMANDS: Can only be executed when no line is selected
+    cmd_display_all = 'DISPLAY_ALL' # Displays all available lines
+    cmd_choose_line = 'CHOOSE_LINE'
+    #
+    menu_command_list = (
+        cmd_display_all,
+        cmd_choose_line
+    )
+
+    # TRACK COMMANDS: Can only be executed when a line is selected
+    cmd_playback = 'PLAYBACK' # Invokes MFAudio to play file
+    cmd_show_data = 'SHOW_DATA' # Shows current data for the selected line
+    cmd_enter_data = 'ENTER_DATA' # Fill out a field in the chosen line
+    cmd_back = 'BACK' # Exit line and return to line choice loop
+    #
+    track_command_list = (
+        cmd_playback,
+        cmd_enter_data,
+        cmd_back
+    )
+    #endregion # Commands list
+
+
+    #region # Command inner functions
+    def display_lines(start=0, end=-1):
+        # Copy data from file to display set
+        if end == -1:
+            display_set = line_info[start:] 
+        else:
+            display_set = line_info[start:end+1] 
+
+        print(editable_header) # Print fields
+
+        for index, data in enumerate(display_set):
+            print(display_set[index])
+    #endregion
+
+
+
+
+    current_track = -1 # Indicates what track was chosen. If none, value = -1
+    while True: # Option loop for commands
+        print('Options:')
+        # Available options to choose from
+        options_list = menu_command_list + universal_command_list
+
+        choice_index = prompt_user_list(options_list, False)
+        answer = options_list[choice_index]
+        print(f'You chose: index: {choice_index} item: {answer}')
+        
+
+        if answer == cmd_display_all:
+            display_lines()
+        if answer == cmd_choose_line:
+            pass
+        elif answer == cmd_help:
+            pass
+        elif answer == cmd_exit:
+            break
+
+
+
+        pass
+
+        if False:
+            # Conditionals for each command
+            if answer == cmd_playback:
+                pass
+            elif answer == cmd_display_all:
+                pass
+            elif answer == cmd_choose_line:
+                pass
+            elif answer == cmd_enter_data:
+                pass
+            elif answer == cmd_help:
+                pass
+            elif answer == cmd_exit:
+                pass
+
+        #break
+
+
+    
+
+    pass
+
+    #print('Choose the data you want to input')
+    #choice_index = prompt_user_list(option_list, False)
+    #print(f'You chose: index: {choice_index} item: {option_list[choice_index]}')
+    #pass
+
+
     # Reassemble file for outputting
     output_data = []
     for index, entry in enumerate(data_set):
