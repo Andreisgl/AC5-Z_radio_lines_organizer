@@ -1,8 +1,11 @@
-# This script runs through the extracted audio lines in a folder
-# and reproduces them one by one. Upon hearing it, you can enter
-# the information you know about it as prompted. This metadata 
-# will be saved to a .csv file for indexing.
+'''This script is used for the indexing of audio lines for the game Ace Combat Zero. Its goal is to aid translation efforts.
+This tool allows you to go through the audio lines and fill out data on each track, mainly:CHARACTER - Character that speaks the line
+MISSION - Mission where the line is found
+ACE STYLE - Ace Style if the line has variants that change with the style
+TEXT - what is said in the line
 
+It can playback the track on the go using MFAudio without the need for conversions or leaving the tool, allowing for a more efficient workflow
+'''
 import os
 import csv
 import subprocess
