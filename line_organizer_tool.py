@@ -81,19 +81,27 @@ def check_paths():
         pass
     #endregion
 
-def prompt_user_list(option_list, custom_answer):
+def prompt_user_list(input_option_list, custom_answer=False, display_options=True):
     # This function creates a prompt to choose from a list.
     # Handles invalid answers. Answer must be an index.
     #
     # custom_answer: If true, allows for a custom answer
+    # display_options:
+        # If true, displays available options. 
+        # Otherwise, this func can be used to validate a number inside a range
+
     # Returns index. If custom, return custom answer.
 
-    if custom_answer:
+    # Copies of input list to avoid changing the original one
+    option_list = input_option_list[:] 
+
+    if custom_answer: # TODO: May accidentally append to original list
         option_list.append('Other')
 
-    for index, entry in enumerate(option_list):
-        print('{} - {}'.format(index, entry))
-    print()
+    if display_options: # Display options if desired
+        for index, entry in enumerate(option_list):
+            print('{} - {}'.format(index, entry))
+        print()
 
     max_index = len(option_list)-1
     valid_index = True
@@ -353,7 +361,6 @@ def surf_lines(line_info, ignore_unknowns):
     # Display routine
     pass
     
-    
 
     #region Commands list
     # Types of commands:
@@ -366,13 +373,15 @@ def surf_lines(line_info, ignore_unknowns):
         cmd_exit
     )
 
-    # MENU COMMANDS: Can only be executed when no line is selected
-    cmd_display_all = 'DISPLAY_ALL' # Displays all available lines
+    # MENU COMMANDS: Can only be executed when no track is selected
+    cmd_display_all = 'DISPLAY_ALL' # Displays all available tracks
     cmd_choose_line = 'CHOOSE_LINE'
+    cmd_set_display_interval = 'SET_DISPLAY_INTERVAL' # Sets the interval of tracks that are displayed
     #
     menu_command_list = (
         cmd_display_all,
-        cmd_choose_line
+        cmd_choose_line,
+        cmd_set_display_interval
     )
 
     # TRACK COMMANDS: Can only be executed when a line is selected
@@ -383,6 +392,7 @@ def surf_lines(line_info, ignore_unknowns):
     #
     track_command_list = (
         cmd_playback,
+        cmd_show_data,
         cmd_enter_data,
         cmd_back
     )
@@ -390,6 +400,8 @@ def surf_lines(line_info, ignore_unknowns):
 
 
     #region # Command inner functions
+    display_set = line_info[:] # Standard value for this set
+    display_interval = [0,-1]
     def display_lines(start=0, end=-1):
         # Copy data from file to display set
         if end == -1:
@@ -398,9 +410,25 @@ def surf_lines(line_info, ignore_unknowns):
             display_set = line_info[start:end+1] 
 
         print(editable_header) # Print fields
-
         for index, data in enumerate(display_set):
-            print(display_set[index])
+            print(data)
+    
+    def set_display_interval():
+        print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_all}')
+        
+        print(f'Range: {0}-{len(line_info)}')
+
+        print('First index (first track is 0): ')
+        start_answer = prompt_user_list(display_set, False, False)
+
+        print(f'Last index (last track is {len(line_info)}): ')
+        end_answer = prompt_user_list(display_set, False, False)
+
+        print(f'Chosen interval: {start_answer}-{end_answer}')
+
+        display_interval[0] = start_answer
+        display_interval[1] = end_answer
+        pass
     #endregion
 
 
@@ -418,9 +446,11 @@ def surf_lines(line_info, ignore_unknowns):
         
 
         if answer == cmd_display_all:
-            display_lines()
+            display_lines(display_interval[0], display_interval[1])
         if answer == cmd_choose_line:
             pass
+        if answer == cmd_set_display_interval:
+            set_display_interval()
         elif answer == cmd_help:
             pass
         elif answer == cmd_exit:
