@@ -190,10 +190,10 @@ def handle__tracks_info_file():
 
     # What info will be requested to index each line.
     # In the sublists, default values for each criteria, if they are a closed set.
-    INDEXING_CRITERIA = ['CHARACTER',
+    INDEXING_CRITERIA = ('CHARACTER',
                         'MISSION_NUMBER',
-                        ['ACE_STYLE', ['MERCENARY', 'SOLDIER', 'KNIGHT', 'NONE']],
-                        'TEXT']
+                        ('ACE_STYLE', ('MERCENARY', 'SOLDIER', 'KNIGHT', '?', 'NONE')),
+                        'TEXT')
 
     file_header = []
     # How many of the first rows shouldn't be editable
@@ -367,8 +367,8 @@ def surf_lines(line_info, ignore_unknowns):
     #region Commands list
     # Types of commands:
     # UNIVERSAL COMMANDS: Can be executed anywhere
-    cmd_display_help = "HELP" # Display commands
-    cmd_exit_loop = 'EXIT' # Saves progress and exits the main program
+    cmd_display_help = 'HELP' # Display commands
+    cmd_exit_loop = 'SAVE_AND_EXIT' # Saves progress and exits the main program
     #
     universal_command_list = (
         cmd_display_help,
@@ -381,9 +381,10 @@ def surf_lines(line_info, ignore_unknowns):
     cmd_set_display_interval = 'SET_DISPLAY_INTERVAL' # Sets the interval of tracks that are displayed
     #
     menu_command_list = (
+        cmd_choose_track,
         cmd_display_tracks,
-        cmd_set_display_interval,
-        cmd_choose_track
+        cmd_set_display_interval
+        
         
     )
 
@@ -404,7 +405,7 @@ def surf_lines(line_info, ignore_unknowns):
 
     #region # Command inner functions
     
-    # Universal Commands:
+    #region Main Menu Commands:
     def display_help():
         print('!!!!!!!!!TODO: Do help prompt!!!')
     #
@@ -446,13 +447,68 @@ def surf_lines(line_info, ignore_unknowns):
         answer = prompt_user_list(line_info, False, False)
         print(f'Chosen track: {answer}')
         return answer
+    #endregion
     
-    
+    #region Track Commands
+    def playback(track_index):
+        track_list = os.listdir(LINES_FOLDER_PATH)
+        track_path = os.path.join(LINES_FOLDER_PATH, track_list[track_index])
+        play_track(track_path)
+    #
+    def show_data(index):
+        original_data = line_info[index]
+        saved_data = original_data[2:]
+        current_data = data_set[index]
+
+        id = saved_data[0]
+        track_name = saved_data[1]
+
+        print()
+        print(f'ID: {id} - TRACK: {track_name}')
+        print(editable_header)
+        print(f'{saved_data} - CURRENTLY SAVED')
+        if saved_data != current_data:
+            print(f'{current_data} - CURRENT CHANGES')
+        print()
+    #
+    def enter_data():
+        print()
+        print('What field do you want to change?')
+        options = editable_header + [cmd_back]
+
+        index = prompt_user_list(options)
+        
+        if options[index] == cmd_back: # If user chose to return, cancel
+            return -1, ''
+
+        field_choice = INDEXING_CRITERIA[index]
+        field_type = type(field_choice)
+
+        field_name = ''
+        data = ''
+
+        # If field is a tuple, it has a fixed set of answers
+        if field_type == tuple:
+            print()
+            print(f'Choose a value for this field')
+            field_name = field_choice[0]
+            field_options = field_choice[1]
+            data = field_options[prompt_user_list(field_options)]
+        
+        # If field is a type, it allows for custom answers
+        elif field_type == str:
+            field_name = field_choice
+            data = input(f'Input new value for {field_name}: ')
+
+        print()
+        return index, data
+
+
     #endregion
 
     
     while True: # Option loop for commands
-        print('Options:')
+        #print('Options:')
         options_list = [] # List containing all available commands
         
         # MAIN MENU
@@ -486,16 +542,30 @@ def surf_lines(line_info, ignore_unknowns):
         
         # TRACK MENU
         elif current_track >= 0 and current_track < len(line_info) : # A track was selected
-            options_list = track_command_list + universal_command_list
-
-            choice_index = prompt_user_list(options_list, False)
-            answer = options_list[choice_index]
-            print(answer)
-
             while True:
+                show_data(current_track)
+                options_list = track_command_list + universal_command_list
+
+                choice_index = prompt_user_list(options_list, False)
+                answer = options_list[choice_index]
+                print(answer)
+
                 #region Track Menu option routes
-                if answer == '':
-                    pass
+                if answer == cmd_playback:
+                    playback(current_track)
+                #
+                elif answer == cmd_show_data:
+                    show_data(current_track)
+                    break
+                #
+                elif answer == cmd_enter_data:
+                    while True:
+                        show_data(current_track)
+                        field_index, data = enter_data()
+                        if field_index == -1: # User wants to cancel
+                            break
+                        else:
+                            data_set[current_track][field_index] = data
                 #
                 elif answer == cmd_display_help:
                     display_help()
