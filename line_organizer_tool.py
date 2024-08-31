@@ -374,13 +374,13 @@ def surf_lines(line_info, ignore_unknowns):
     )
 
     # MENU COMMANDS: Can only be executed when no track is selected
-    cmd_display_all = 'DISPLAY_ALL' # Displays all available tracks
-    cmd_choose_line = 'CHOOSE_LINE'
+    cmd_display_tracks = 'DISPLAY_TRACKS' # Displays tracks
+    cmd_choose_track = 'CHOOSE_TRACK'
     cmd_set_display_interval = 'SET_DISPLAY_INTERVAL' # Sets the interval of tracks that are displayed
     #
     menu_command_list = (
-        cmd_display_all,
-        cmd_choose_line,
+        cmd_display_tracks,
+        cmd_choose_track,
         cmd_set_display_interval
     )
 
@@ -402,7 +402,7 @@ def surf_lines(line_info, ignore_unknowns):
     #region # Command inner functions
     display_set = line_info[:] # Standard value for this set
     display_interval = [0,-1]
-    def display_lines(start=0, end=-1):
+    def display_tracks(start=0, end=-1):
         # Copy data from file to display set
         if end == -1:
             display_set = line_info[start:] 
@@ -414,7 +414,7 @@ def surf_lines(line_info, ignore_unknowns):
             print(data)
     
     def set_display_interval():
-        print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_all}')
+        print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_tracks}')
         
         print(f'Range: {0}-{len(line_info)}')
 
@@ -445,9 +445,9 @@ def surf_lines(line_info, ignore_unknowns):
         print(f'You chose: index: {choice_index} item: {answer}')
         
 
-        if answer == cmd_display_all:
-            display_lines(display_interval[0], display_interval[1])
-        if answer == cmd_choose_line:
+        if answer == cmd_display_tracks:
+            display_tracks(display_interval[0], display_interval[1])
+        if answer == cmd_choose_track:
             pass
         if answer == cmd_set_display_interval:
             set_display_interval()
@@ -464,9 +464,9 @@ def surf_lines(line_info, ignore_unknowns):
             # Conditionals for each command
             if answer == cmd_playback:
                 pass
-            elif answer == cmd_display_all:
+            elif answer == cmd_display_tracks:
                 pass
-            elif answer == cmd_choose_line:
+            elif answer == cmd_choose_track:
                 pass
             elif answer == cmd_enter_data:
                 pass
