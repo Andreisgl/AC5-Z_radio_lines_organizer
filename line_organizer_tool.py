@@ -250,7 +250,9 @@ def handle__tracks_info_file():
 def surf_lines(line_info, ignore_unknowns):
     # This will surf the lines and see what data needs completion.
     # Receives the "line_info" of read file, and value for "ignore_unknowns".
-    #
+    
+
+    #region old cmds
     # "ignore_unknowns": During field completion,
     # skip values marked with '?', that couldn't be determined by the user.
     global INDEXING_CRITERIA
@@ -269,7 +271,7 @@ def surf_lines(line_info, ignore_unknowns):
 
     num_static_columns = 2 # Ammount of static columns (ID, file name)
 
-    #region # Special inputs
+    
     # Print help screen that show what commands can be given:
     help_messages = [
         '\nTime to fill out the data!',
@@ -365,12 +367,12 @@ def surf_lines(line_info, ignore_unknowns):
     #region Commands list
     # Types of commands:
     # UNIVERSAL COMMANDS: Can be executed anywhere
-    cmd_help = "HELP" # Display commands
-    cmd_exit = 'EXIT' # Saves progress and exits the main program
+    cmd_display_help = "HELP" # Display commands
+    cmd_exit_loop = 'EXIT' # Saves progress and exits the main program
     #
     universal_command_list = (
-        cmd_help,
-        cmd_exit
+        cmd_display_help,
+        cmd_exit_loop
     )
 
     # MENU COMMANDS: Can only be executed when no track is selected
@@ -380,8 +382,9 @@ def surf_lines(line_info, ignore_unknowns):
     #
     menu_command_list = (
         cmd_display_tracks,
-        cmd_choose_track,
-        cmd_set_display_interval
+        cmd_set_display_interval,
+        cmd_choose_track
+        
     )
 
     # TRACK COMMANDS: Can only be executed when a line is selected
@@ -400,7 +403,16 @@ def surf_lines(line_info, ignore_unknowns):
 
 
     #region # Command inner functions
-    display_set = line_info[:] # Standard value for this set
+    
+    # Universal Commands:
+    def display_help():
+        pass
+    #
+    def exit_loop():
+        pass
+
+    # Menu Commands:
+    display_set = line_info[:] # Standard value for this set # TODO: Maybe this line is redundant
     display_interval = [0,-1]
     def display_tracks(start=0, end=-1):
         # Copy data from file to display set
@@ -410,31 +422,39 @@ def surf_lines(line_info, ignore_unknowns):
             display_set = line_info[start:end+1] 
 
         print(editable_header) # Print fields
+        # TODO: Add logic to filter out dummy tracks and other conditions
         for index, data in enumerate(display_set):
             print(data)
-    
+    #
     def set_display_interval():
         print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_tracks}')
         
         print(f'Range: {0}-{len(line_info)}')
 
         print('First index (first track is 0): ')
-        start_answer = prompt_user_list(display_set, False, False)
+        start_answer = prompt_user_list(line_info, False, False)
 
         print(f'Last index (last track is {len(line_info)}): ')
-        end_answer = prompt_user_list(display_set, False, False)
+        end_answer = prompt_user_list(line_info, False, False)
 
         print(f'Chosen interval: {start_answer}-{end_answer}')
 
-        display_interval[0] = start_answer
-        display_interval[1] = end_answer
-        pass
+        return start_answer, end_answer
+    #
+    current_track = -1 # Indicates what track was chosen. If none, value = -1
+    def choose_track():
+        answer = prompt_user_list(line_info, False, False)
+
+        print(f'Chosen track: {answer}')
+        return answer
+    
+    
     #endregion
 
 
 
 
-    current_track = -1 # Indicates what track was chosen. If none, value = -1
+    
     while True: # Option loop for commands
         print('Options:')
         # Available options to choose from
@@ -447,16 +467,23 @@ def surf_lines(line_info, ignore_unknowns):
 
         if answer == cmd_display_tracks:
             display_tracks(display_interval[0], display_interval[1])
-        if answer == cmd_choose_track:
+        #
+        elif answer == cmd_set_display_interval:
+            display_interval[0], display_interval[1] = set_display_interval()
+        #
+        elif answer == cmd_choose_track:
+            current_track = choose_track()
+        #
+        elif answer == cmd_display_help:
             pass
-        if answer == cmd_set_display_interval:
-            set_display_interval()
-        elif answer == cmd_help:
-            pass
-        elif answer == cmd_exit:
+        #
+        elif answer == cmd_exit_loop:
             break
 
-
+        # TODO: Maybe move all elifs into this if track == -1
+        if current_track != -1: # If a track is selected
+            while False:
+                pass # Do track-specific stuff here
 
         pass
 
@@ -470,9 +497,9 @@ def surf_lines(line_info, ignore_unknowns):
                 pass
             elif answer == cmd_enter_data:
                 pass
-            elif answer == cmd_help:
+            elif answer == cmd_display_help:
                 pass
-            elif answer == cmd_exit:
+            elif answer == cmd_exit_loop:
                 pass
 
         #break
