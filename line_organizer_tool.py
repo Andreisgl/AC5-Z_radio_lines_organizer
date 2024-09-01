@@ -84,7 +84,7 @@ def check_paths():
         pass
     #endregion
 
-def prompt_user_list(input_option_list, custom_answer=False, display_options=True):
+def prompt_user_list(input_option_list, custom_answer=False, display_options=True, custom_answer_text='Other'):
     # This function creates a prompt to choose from a list.
     # Handles invalid answers. Answer must be an index.
     #
@@ -96,10 +96,11 @@ def prompt_user_list(input_option_list, custom_answer=False, display_options=Tru
     # Returns index. If custom, return custom answer.
 
     # Copies of input list to avoid changing the original one
-    option_list = input_option_list[:] 
+    #option_list = input_option_list[:]
+    option_list = input_option_list
 
     if custom_answer: # TODO: May accidentally append to original list
-        option_list.append('Other')
+        option_list.append(custom_answer_text)
 
     if display_options: # Display options if desired
         for index, entry in enumerate(option_list):
@@ -142,7 +143,9 @@ def choose_project():
 
     print('Choose which project to open/create:')
     
-    chosen_project = projects_list[prompt_user_list(projects_list, True)]
+    project_index = prompt_user_list(projects_list, custom_answer=True, custom_answer_text='Create new project')
+
+    chosen_project = projects_list[project_index]
 
 
     print('Opening "{}".'.format(chosen_project))
