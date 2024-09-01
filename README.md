@@ -164,7 +164,9 @@ DOCUMENTATION IN PROGRESS
 
 ## CSV DATA
 This tool uses a custom .csv separator and quotechar.
-SEPARATOR: \
+
+SEPARATOR: \\
+
 QUOTECHAR: `
 
 
@@ -178,3 +180,14 @@ This tool is a WIP. Some of the features implement and objectives to reach are t
 - Detect dummy files automatically - Dummy files have the word "Dummy" in their filenames. Detect it and mark line accordingly
 
 - Move the indexing criterion field from hard-coded to a list in the project.ACL file. This will ensure the tool is more customizeable and can be suited to more situations
+
+- Add hooks for easier autocomplete.
+    - This will allow for less typing for many repeated data, like character names.
+    - Add newly input values to autocomplete
+- Integrate with the text decoding utilities
+    - As the radio text data extracted with other tools already has text, character name and mission attached, they might help a lot with the process! It may make sense to integrate both tools into a single package.
+    - It also will help with fighting text discrepancies with the in-game text that would naturally happen when typing by ear
+- Implement the second part of the tool, where it guides the dubbing and organizing process, not only the indexing process.
+
+- Consider restructuring the code. The current structure was created for the old, linear workflow. With the new changes to the UI, the old structure showed itself limiting. This might hinder the next developments of the project, which include tools for better organizing a dubbing job.
+    - Considering this code is almost a year old (I could swear this was older!)
