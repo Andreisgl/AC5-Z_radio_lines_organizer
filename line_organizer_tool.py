@@ -286,44 +286,51 @@ def surf_lines(line_info, ignore_unknowns):
 
     #region Commands list
     # Types of commands:
+    
     # UNIVERSAL COMMANDS: Can be executed anywhere
-    cmd_display_help = 'HELP' # Display commands
-    cmd_exit_loop = 'SAVE_AND_EXIT' # Saves progress and exits the main program
+    cmd_display_help = ('HELP', 'Displays the help prompt') # Display commands
+    cmd_exit_loop = ('SAVE_AND_EXIT', 'Saves progress and exits tool') # Saves progress and exits the main program
     #
-    universal_command_list = (
+    universal_cmd_list = (
         cmd_display_help,
         cmd_exit_loop
     )
 
     # MENU COMMANDS: Can only be executed when no track is selected
-    cmd_display_tracks = 'DISPLAY_TRACKS' # Displays tracks
-    cmd_choose_track = 'CHOOSE_TRACK'
-    cmd_set_display_interval = 'SET_DISPLAY_INTERVAL' # Sets the interval of tracks that are displayed
+    cmd_display_tracks = ('DISPLAY_TRACKS', 'Displays tracks in the desired interval') # Displays tracks
+    cmd_choose_track = ('CHOOSE_TRACK', 'Choose a track by index')
+    cmd_set_display_interval = ('SET_DISPLAY_INTERVAL', 'Set interval of tracks that shall be shown') # Sets the interval of tracks that are displayed
     #
-    menu_command_list = (
+    menu_cmd_list = (
         cmd_choose_track,
         cmd_display_tracks,
         cmd_set_display_interval
     )
 
     # TRACK COMMANDS: Can only be executed when a line is selected
-    cmd_playback = 'PLAYBACK' # Invokes MFAudio to play file
-    cmd_show_data = 'SHOW_DATA' # Shows current data for the selected line
-    cmd_enter_data = 'ENTER_DATA' # Fill out a field in the chosen line
-    cmd_back = 'BACK' # Exit line and return to main menu loop
+    cmd_playback = ('PLAYBACK', 'Invokes MFAudio to play the current track') # Invokes MFAudio to play file
+    cmd_show_data = ('SHOW_DATA', 'Shows metadata for current track') # Shows current data for the selected line
+    cmd_enter_data = ('ENTER_DATA', 'Input metadata for current line') # Fill out a field in the chosen line
+    cmd_back = ('BACK', 'Return to previous menu') # Exit line and return to main menu loop
     #
-    track_command_list = (
+    track_cmd_list = (
         cmd_playback,
         cmd_show_data,
         cmd_enter_data,
         cmd_back
     )
+
+    all_cmds = universal_cmd_list + menu_cmd_list + track_cmd_list
     #endregion # Commands list
     #region # Command inner functions
     
     #region Main Menu Commands:
     def display_help():
-        print('!!!!!!!!!TODO: Do help prompt!!!')
+        print()
+        print('COMMANDS:')
+        for cmd in all_cmds:
+            print(f'{cmd[0]} - {cmd[1]}')
+        print()
     #
     def exit_loop():
         print('Exiting application')
@@ -344,7 +351,7 @@ def surf_lines(line_info, ignore_unknowns):
             print(data)
     #
     def set_display_interval():
-        print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_tracks}')
+        print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_tracks[0]}')
         
         print(f'Range: {0}-{len(line_info)}')
 
@@ -390,11 +397,11 @@ def surf_lines(line_info, ignore_unknowns):
     def enter_data():
         print()
         print('What field do you want to change?')
-        options = editable_header + [cmd_back]
+        options = editable_header + [cmd_back[0]]
 
         index = prompt_user_list(options)
         
-        if options[index] == cmd_back: # If user chose to return, cancel
+        if options[index] == cmd_back[0]: # If user chose to return, cancel
             return -1, ''
 
         field_choice = INDEXING_CRITERIA[index]
@@ -429,26 +436,27 @@ def surf_lines(line_info, ignore_unknowns):
         
         # MAIN MENU
         if current_track == -1:
-            options_list = menu_command_list + universal_command_list
+            options_list = menu_cmd_list + universal_cmd_list
+            options_list = [x[0] for x in options_list]
 
             choice_index = prompt_user_list(options_list, False)
             answer = options_list[choice_index]
             print(answer)
 
             #region Main Menu option routes
-            if answer == cmd_display_tracks:
+            if answer == cmd_display_tracks[0]:
                 display_tracks(display_interval[0], display_interval[1])
             #
-            elif answer == cmd_set_display_interval:
+            elif answer == cmd_set_display_interval[0]:
                 display_interval[0], display_interval[1] = set_display_interval()
             #
-            elif answer == cmd_choose_track:
+            elif answer == cmd_choose_track[0]:
                 current_track = choose_track()
             #
-            elif answer == cmd_display_help:
+            elif answer == cmd_display_help[0]:
                 display_help()
             #
-            elif answer == cmd_exit_loop:
+            elif answer == cmd_exit_loop[0]:
                 quit = True
             #
             else:
@@ -460,21 +468,22 @@ def surf_lines(line_info, ignore_unknowns):
         elif current_track >= 0 and current_track < len(line_info) : # A track was selected
             while True:
                 show_data(current_track)
-                options_list = track_command_list + universal_command_list
+                options_list = track_cmd_list + universal_cmd_list
+                options_list = [x[0] for x in options_list]
 
                 choice_index = prompt_user_list(options_list, False)
                 answer = options_list[choice_index]
                 print(answer)
 
                 #region Track Menu option routes
-                if answer == cmd_playback:
+                if answer == cmd_playback[0]:
                     playback(current_track)
                 #
-                elif answer == cmd_show_data:
+                elif answer == cmd_show_data[0]:
                     show_data(current_track)
                     break
                 #
-                elif answer == cmd_enter_data:
+                elif answer == cmd_enter_data[0]:
                     while True:
                         show_data(current_track)
                         field_index, data = enter_data()
@@ -483,15 +492,15 @@ def surf_lines(line_info, ignore_unknowns):
                         else:
                             data_set[current_track][field_index] = data
                 #
-                elif answer == cmd_display_help:
+                elif answer == cmd_display_help[0]:
                     display_help()
                 #
-                elif answer == cmd_back:
+                elif answer == cmd_back[0]:
                     current_track = -1
                     print('Back to Main Menu')
                     break
                 #
-                elif answer == cmd_exit_loop:
+                elif answer == cmd_exit_loop[0]:
                     quit = True
                     break
                 #
