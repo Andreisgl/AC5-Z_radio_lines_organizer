@@ -297,9 +297,9 @@ def surf_lines(line_info, ignore_unknowns):
     )
 
     # MENU COMMANDS: Can only be executed when no track is selected
-    cmd_display_tracks = ('DISPLAY_TRACKS', 'Displays tracks in the desired interval') # Displays tracks
+    cmd_display_tracks = ('DISPLAY_TRACKS', 'Displays tracks in the desired interval. Shows all tracks by default') # Displays tracks
     cmd_choose_track = ('CHOOSE_TRACK', 'Choose a track by index')
-    cmd_set_display_interval = ('SET_DISPLAY_INTERVAL', 'Set interval of tracks that shall be shown') # Sets the interval of tracks that are displayed
+    cmd_set_display_interval = ('SET_DISPLAY_INTERVAL', 'Set interval of tracks that shall be shown when using DISPLAY_TRACKS') # Sets the interval of tracks that are displayed
     #
     menu_cmd_list = (
         cmd_choose_track,
@@ -340,15 +340,21 @@ def surf_lines(line_info, ignore_unknowns):
     display_interval = [0,-1]
     def display_tracks(start=0, end=-1):
         # Copy data from file to display set
+        # TODO: Ok, since 'line_info' which is supposed to reflect the saved data, only get updated when this function is calld (once every program execution),
+        # I need to use 'data_set' to reflect the most current changes and save every time I update a field. Messy, gotta fix this later!
         if end == -1:
-            display_set = line_info[start:] 
+            display_set = line_info[start:]
+            display_data_set = data_set[start:]
         else:
             display_set = line_info[start:end+1] 
+            display_data_set = data_set[start:end+1] 
+        
+        headers = [x[:2] for x in display_set]
 
         print(editable_header) # Print fields
         # TODO: Add logic to filter out dummy tracks and other conditions
-        for index, data in enumerate(display_set):
-            print(data)
+        for index in range(len(display_set)):
+            print(headers[index] + display_data_set[index])
     #
     def set_display_interval():
         print(f'Choose the interval of tracks you wish to see displayed when using {cmd_display_tracks[0]}')
@@ -383,8 +389,8 @@ def surf_lines(line_info, ignore_unknowns):
         saved_data = original_data[2:]
         current_data = data_set[index]
 
-        id = saved_data[0]
-        track_name = saved_data[1]
+        id = original_data[0]
+        track_name = original_data[1]
 
         print()
         print(f'ID: {id} - TRACK: {track_name}')
@@ -426,6 +432,15 @@ def surf_lines(line_info, ignore_unknowns):
         print()
         return index, data
 
+    def save_data():
+        # Reassemble file for outputting
+        print('SAVING DATA...')
+        output_data = []
+        for index, entry in enumerate(data_set):
+            output_data.append(static_columns[index] + data_set[index])
+        output_data.insert(0, header) # Insert header back
+    
+        return output_data
 
     #endregion
 
@@ -497,6 +512,7 @@ def surf_lines(line_info, ignore_unknowns):
                 #
                 elif answer == cmd_back[0]:
                     current_track = -1
+                    save_data()
                     print('Back to Main Menu')
                     break
                 #
@@ -511,15 +527,10 @@ def surf_lines(line_info, ignore_unknowns):
         if quit:
             exit_loop()
             break
-
-    # Reassemble file for outputting
-    print('SAVING DATA...')
-    output_data = []
-    for index, entry in enumerate(data_set):
-        output_data.append(static_columns[index] + data_set[index])
-    output_data.insert(0, header) # Insert header back
     
-    return output_data
+    
+    
+    return save_data()
 
 
 def get_track_playback_info(new_file, is_bgm = True):
