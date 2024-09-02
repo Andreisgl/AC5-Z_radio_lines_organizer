@@ -4,6 +4,7 @@ PROJECTS/*
 #*.csv
 MFAudio/
 storage/
+export/
 
 !/PROJECTS/ACZ
 
