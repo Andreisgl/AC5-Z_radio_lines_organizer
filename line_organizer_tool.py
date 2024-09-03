@@ -421,8 +421,8 @@ def surf_lines(line_info, ignore_unknowns):
         print()
         return index, data
 
-    def save_data():
-        # Reassemble file for outputting
+    def reassemble_data():
+        '''Reassemble file for outputting and saving'''
         print('SAVING DATA...')
         output_data = []
         for index, entry in enumerate(data_set):
@@ -501,7 +501,6 @@ def surf_lines(line_info, ignore_unknowns):
                 #
                 elif answer == cmd_back[0]:
                     current_track = -1
-                    save_data()
                     print('Back to Main Menu')
                     break
                 #
@@ -519,7 +518,7 @@ def surf_lines(line_info, ignore_unknowns):
     
     
     
-    return save_data()
+    return reassemble_data()
 
 
 def get_track_playback_info(new_file, is_bgm = True):
