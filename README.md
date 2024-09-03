@@ -171,6 +171,11 @@ QUOTECHAR: `
 
 
 ## ROADMAP
+
+    ! - Completed
+    @ - In progress
+    # - Soon to be started
+
 This tool is a WIP. Some of the features implement and objectives to reach are the following:
 
 - Organize files: When prompted, make a copy of the tracks and separate them in folders based on the indexing criteria
