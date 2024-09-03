@@ -34,14 +34,11 @@ def check_paths():
     # PROMPT USER TO CHOOSE PROJECT
     chosen_project = choose_project()
 
-    #region # Intra-project paths
-    # Project specific folder
-    # lines folder
-    # csv file
+    #region # Intra-project paths    
     global PROJECT_NAME
-    global PROJECT_PATH
-    global LINES_FOLDER_PATH
-    global LINE_INFO_FILE_PATH
+    global PROJECT_PATH # Project specific folder
+    global LINES_FOLDER_PATH # lines folder
+    global LINE_INFO_FILE_PATH # csv file
     # The existence of this file indicates a dir is a project
     global PROJECT_FLAG_FILE_PATH 
     
@@ -81,19 +78,18 @@ def check_paths():
                 get_track_playback_info(False, True)
             else:
                 get_track_playback_info(False, False)
-        pass
     #endregion
 
 def prompt_user_list(input_option_list, custom_answer=False, display_options=True, custom_answer_text='Other'):
-    # This function creates a prompt to choose from a list.
-    # Handles invalid answers. Answer must be an index.
-    #
-    # custom_answer: If true, allows for a custom answer
-    # display_options:
-        # If true, displays available options. 
-        # Otherwise, this func can be used to validate a number inside a range
+    '''This function creates a prompt to choose from a list.
+    Handles invalid answers. Answer must be an index.
+    
+    custom_answer: If true, allows for a custom answer
+    display_options:
+        If true, displays available options. 
+        Otherwise, this func can be used to validate a number inside a range
 
-    # Returns index. If custom, return custom answer.
+    Returns index. If custom, return custom answer.'''
 
     # Copies of input list to avoid changing the original one
     #option_list = input_option_list[:]
@@ -136,18 +132,12 @@ def prompt_user_list(input_option_list, custom_answer=False, display_options=Tru
 
 def choose_project():
     # Prompt user to choose which project to open/create
-    # For now, name is hard-coded.
     global PROJECTS_DB_PATH
 
     projects_list = os.listdir(PROJECTS_DB_PATH)
-
     print('Choose which project to open/create:')
-    
     project_index = prompt_user_list(projects_list, custom_answer=True, custom_answer_text='Create new project')
-
     chosen_project = projects_list[project_index]
-
-
     print('Opening "{}".'.format(chosen_project))
 
     return chosen_project
@@ -159,13 +149,13 @@ def get_rows_line_data_csv():
         return [x for x in csv_reader]
 
 def write_row_line_data_csv(data, is_list, append):
-    # Write to the csv file.
-    #
-    # If append == True, append to file.
-    # Else, overwrite it.
-    #
-    # If is_list, write all items of iterables as rows
-    # Else, write a single row only
+    '''Write to the csv file.
+    
+    If append == True, append to file.
+    Else, overwrite it.
+    
+    If is_list, write all items of iterables as rows
+    Else, write a single row only'''
 
     mode = ''
     if append:
@@ -182,7 +172,7 @@ def write_row_line_data_csv(data, is_list, append):
 
 
 def handle__tracks_info_file():
-    # Go through the lines in the index
+    '''Go through the lines in the index'''
     global PROJECT_PATH
     global LINES_FOLDER_PATH
     global LINE_INFO_FILE_PATH
@@ -212,8 +202,10 @@ def handle__tracks_info_file():
         for criteria in INDEXING_CRITERIA:
             if type(criteria) == str:
                 file_header.append(criteria)
-            else: # If criteria has preset answers:
+            elif type(criteria) == tuple: # If criteria has preset answers:
                 file_header.append(criteria[0])
+            else: # If field does not fit into these conditions
+                input('PROBLEM WITH INDEXING CRITERIA! PRESS ENTER TO CONTINUE')
         # Constant columns. "constant_columns" = 2, since there are 2
         file_header.insert(0, 'ID') # Insert ID column. It autoincrements.
         file_header.insert(1, 'FILENAME') # Insert FILENAME column.
@@ -233,8 +225,7 @@ def handle__tracks_info_file():
         write_row_line_data_csv(all_rows, True, True)
     elif len(track_list) == 0: # If there are no tracks to be indexed:
         print('There are no tracks to be indexed!')
-        print('Copy tracks to the "{}" folder'
-              .format(os.path.basename(LINES_FOLDER_PATH)))
+        print(f'Copy tracks to the "{os.path.basename(LINES_FOLDER_PATH)}" folder')
         input(INPUT_EXIT_MESSAGE)
         return False
 
@@ -254,15 +245,13 @@ def handle__tracks_info_file():
     write_row_line_data_csv(edited_file_data, True, False)
 
 def surf_lines(line_info, ignore_unknowns):
-    # This will surf the lines and see what data needs completion.
-    # Receives the "line_info" of read file, and value for "ignore_unknowns".
+    '''This will surf the lines and see what data needs completion.
+    Receives the "line_info" of read file, and value for "ignore_unknowns".
+     
+    "ignore_unknowns": During field completion,
+    skip values marked with '?', that couldn't be determined by the user.'''
     
-
-    
-    # "ignore_unknowns": During field completion,
-    # skip values marked with '?', that couldn't be determined by the user.
     global INDEXING_CRITERIA
-
     global INPUT_CONTINUE_MESSAGE
 
     num_static_columns = 2 # Ammount of static columns (ID, file name)
@@ -534,25 +523,26 @@ def surf_lines(line_info, ignore_unknowns):
 
 
 def get_track_playback_info(new_file, is_bgm = True):
-    # This function prompts the use
-    # If tracks are BGM, choose BGM parameters.
-    # Else, use RADIO parameters.
-    #
-    # If new_file == true, prompt user to input type data
-    # Else, receive if tracks are BGM or not
+    '''
+    This function prompts the use
+    If tracks are BGM, choose BGM parameters.
+    Else, use RADIO parameters.
+    
+    If new_file == true, prompt user to input type data
+    Else, receive if tracks are BGM or not
 
-    # Argument list for MFAudio, with indexes for the lists used in this code
-        # 0 -  /IFnnnnn	Input frequency
-        # 1 -  /ICn	Input channels
-        # 2 -  /IIxxxx	Input interleave (hex)
-        # 3 -  /IHxxxx	Input headerskip (hex)
-        # 4 -  /OTtttt	Output type (WAVU, VAGC,
-        # 	            SS2U, SS2C, RAWU, RAWC)
-        # 5 -  /OFnnnnn	Output frequency
-        # 6 -  /OCn	Output channels
-        # 7 -  /OIxxxx	Output interleave (hex)
-        # 8 -  "InputFile"	Input file to play/convert
-        # 9 -  "OutputFile"	Output file to convert to
+    Argument list for MFAudio, with indexes for the lists used in this code
+        0 -  /IFnnnnn	Input frequency
+        1 -  /ICn	Input channels
+        2 -  /IIxxxx	Input interleave (hex)
+        3 -  /IHxxxx	Input headerskip (hex)
+        4 -  /OTtttt	Output type (WAVU, VAGC,
+         	            SS2U, SS2C, RAWU, RAWC)
+        5 -  /OFnnnnn	Output frequency
+        6 -  /OCn	Output channels
+        7 -  /OIxxxx	Output interleave (hex)
+        8 -  "InputFile"	Input file to play/convert
+        9 -  "OutputFile"	Output file to convert to'''
 
     global TRACKS_ARE_BGM
     global MFAUDIO_ARG_SET
@@ -584,8 +574,8 @@ def get_track_playback_info(new_file, is_bgm = True):
             MFAUDIO_ARG_SET = MFAUDIO_BGM_ARGS
 
 def play_track(track_path):
-    # This method plays the chosen track through MFAudio,
-    # with the predefined arguments chosen on project creation
+    '''This method plays the chosen track through MFAudio,
+    with the predefined arguments chosen on project creation'''
     global MFAUDIO_ARG_SET
     global SCRIPT_PATH
     global MFAUDIO_PATH
